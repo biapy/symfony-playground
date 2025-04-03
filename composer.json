@@ -95,7 +95,8 @@
             "@ci:security:composer-audit"
         ],
         "ci:code-quality": [
-            "@ci:code-quality:php-cs-fixer"
+            "@ci:code-quality:php-cs-fixer",
+            "@ci:code-quality:rector"
         ],
         "ci:sa": "@ci:static-analysis",
         "ci:static-analysis": [
@@ -104,16 +105,20 @@
         ],
         "ci:php-cs-fixer": "@ci:code-quality:php-cs-fixer",
         "ci:code-quality:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "ci:rector": "@ci:code-quality:rector",
+        "ci:code-quality:rector": "php tools/rector/vendor/bin/rector process --dry-run",
         "ci:phpstan": "@ci:static-analysis:phpstan",
         "ci:static-analysis:phpstan": "php tools/phpstan/vendor/bin/phpstan analyse",
         "ci:psalm": "@ci:static-analysis:psalm",
         "ci:static-analysis:psalm": "php tools/psalm/vendor/bin/psalm",
         "ci:security:composer-audit": "composer audit",
         "fix": [
+            "@fix:rector",
             "@fix:php-cs-fixer"
         ],
         "format": "@fix:php-cs-fixer",
-        "fix:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix"
+        "fix:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix",
+        "fix:rector": "php tools/rector/vendor/bin/rector process"
     },
     "conflict": {
         "symfony/symfony": "*"
