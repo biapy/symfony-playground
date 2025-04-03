@@ -96,7 +96,8 @@
         ],
         "ci:code-quality": [
             "@ci:code-quality:php-cs-fixer",
-            "@ci:code-quality:rector"
+            "@ci:code-quality:rector",
+            "@ci:code-quality:phpmd"
         ],
         "ci:sa": "@ci:static-analysis",
         "ci:static-analysis": [
@@ -107,6 +108,8 @@
         "ci:code-quality:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
         "ci:rector": "@ci:code-quality:rector",
         "ci:code-quality:rector": "php tools/rector/vendor/bin/rector process --dry-run",
+        "ci:phpmd": "@ci:code-quality:phpmd",
+        "ci:code-quality:phpmd": "php tools/phpmd/vendor/bin/phpmd --cache --color ./src ansi ./phpmd.dist.xml",
         "ci:phpstan": "@ci:static-analysis:phpstan",
         "ci:static-analysis:phpstan": "php tools/phpstan/vendor/bin/phpstan analyse",
         "ci:psalm": "@ci:static-analysis:psalm",

@@ -23,6 +23,9 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 
+# PHP Mess Detector
+/.phpmd.result-cache.php
+
 # Created by https://www.toptal.com/developers/gitignore/api/php-cs-fixer
 # Edit at https://www.toptal.com/developers/gitignore?templates=php-cs-fixer
 
