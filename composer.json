@@ -99,12 +99,15 @@
         ],
         "ci:sa": "@ci:static-analysis",
         "ci:static-analysis": [
-            "@ci:static-analysis:phpstan"
+            "@ci:static-analysis:phpstan",
+            "@ci:static-analysis:psalm"
         ],
         "ci:php-cs-fixer": "@ci:code-quality:php-cs-fixer",
         "ci:code-quality:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
         "ci:phpstan": "@ci:static-analysis:phpstan",
         "ci:static-analysis:phpstan": "php tools/phpstan/vendor/bin/phpstan analyse",
+        "ci:psalm": "@ci:static-analysis:psalm",
+        "ci:static-analysis:psalm": "php tools/psalm/vendor/bin/psalm",
         "ci:security:composer-audit": "composer audit",
         "fix": [
             "@fix:php-cs-fixer"
