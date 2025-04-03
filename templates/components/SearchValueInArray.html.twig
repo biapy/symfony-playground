@@ -1,0 +1,19 @@
+
+{#
+@copyright 2025 Biapy
+@license MIT
+#}
+<div{{ attributes }}>
+
+    <input type="text"  data-model="query" placeholder="Results update as you type..." class="form-control" />
+
+    <div class="array-results pt-3" data-loading="addClass(opacity-50)">
+        <ul>
+        {% for value in computed.results %}
+            <li>{{ value }}</li>
+        {% else %}
+            <li>No results found for "{{ query }}"</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
