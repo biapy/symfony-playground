@@ -19,7 +19,7 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @implements ClassMetadataFactory<T>
  */
-class PhpStanMetadataFactory implements ClassMetadataFactory
+final class PhpStanMetadataFactory implements ClassMetadataFactory
 {
     /**
      * Last used object manager.

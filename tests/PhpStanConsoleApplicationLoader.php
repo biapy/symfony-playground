@@ -15,6 +15,7 @@ require dirname(__DIR__).'/tests/bootstrap.php';
 $env = $_SERVER['APP_ENV'] ?? 'dev';
 $debug = (bool) ($_SERVER['APP_DEBUG'] ?? false);
 
+/** @psalm-suppress TypeDoesNotContainType */
 if (!is_string($env)) {
     throw new RuntimeException('APP_ENV environment variable is not a string.');
 }

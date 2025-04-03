@@ -20,7 +20,7 @@ use Doctrine\Persistence\ObjectRepository;
  *
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  */
-class PhpStanObjectManager implements ObjectManager
+final class PhpStanObjectManager implements ObjectManager
 {
     private ?ObjectManager $manager = null;
 
