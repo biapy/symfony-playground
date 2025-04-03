@@ -1,0 +1,14 @@
+{
+    "require-dev": {
+        "squizlabs/php_codesniffer": "*",
+        "spryker/code-sniffer": "^0.17.28",
+        "slevomat/coding-standard": "^8.15",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "escapestudios/symfony2-coding-standard": "3.x-dev"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
