@@ -85,7 +85,15 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "ci": [
+            "@ci:php-cs-fixer"
+        ],
+        "ci:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "fix": [
+            "@fix:php-cs-fixer"
+        ],
+        "fix:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix"
     },
     "conflict": {
         "symfony/symfony": "*"
