@@ -87,12 +87,29 @@
             "@auto-scripts"
         ],
         "ci": [
-            "@ci:php-cs-fixer"
+            "@ci:security",
+            "@ci:code-quality",
+            "@ci:static-analysis"
         ],
-        "ci:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "ci:security": [
+            "@ci:security:composer-audit"
+        ],
+        "ci:code-quality": [
+            "@ci:code-quality:php-cs-fixer"
+        ],
+        "ci:sa": "@ci:static-analysis",
+        "ci:static-analysis": [
+            "@ci:static-analysis:phpstan"
+        ],
+        "ci:php-cs-fixer": "@ci:code-quality:php-cs-fixer",
+        "ci:code-quality:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "ci:phpstan": "@ci:static-analysis:phpstan",
+        "ci:static-analysis:phpstan": "php tools/phpstan/vendor/bin/phpstan analyse",
+        "ci:security:composer-audit": "composer audit",
         "fix": [
             "@fix:php-cs-fixer"
         ],
+        "format": "@fix:php-cs-fixer",
         "fix:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix"
     },
     "conflict": {
