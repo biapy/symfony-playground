@@ -63,7 +63,7 @@ final class PhpStanMetadataFactory implements ClassMetadataFactory
     {
         $manager = $this->getManagerForClass($className);
 
-        if (null === $manager) {
+        if (!$manager instanceof ObjectManager) {
             reset($this->doctrineRegistries);
             $manager = current($this->doctrineRegistries)->getManager();
         }
@@ -82,11 +82,11 @@ final class PhpStanMetadataFactory implements ClassMetadataFactory
     {
         $manager = $this->getManagerForClass($className);
 
-        if (null === $manager) {
-            return true;
+        if ($manager instanceof ObjectManager) {
+            return $manager->getMetadataFactory()->isTransient($className);
         }
 
-        return $manager->getMetadataFactory()->isTransient($className);
+        return true;
     }
 
     /**
@@ -97,11 +97,11 @@ final class PhpStanMetadataFactory implements ClassMetadataFactory
     {
         $manager = $this->getManagerForClass($className);
 
-        if (null === $manager) {
-            return false;
+        if ($manager instanceof ObjectManager) {
+            return $manager->getMetadataFactory()->hasMetadataFor($className);
         }
 
-        return $manager->getMetadataFactory()->hasMetadataFor($className);
+        return false;
     }
 
     /**
@@ -114,7 +114,7 @@ final class PhpStanMetadataFactory implements ClassMetadataFactory
     {
         $manager = $this->getManagerForClass($className);
 
-        if (null === $manager) {
+        if (!$manager instanceof ObjectManager) {
             throw new \RuntimeException(sprintf('No manager found for class "%s"', $className));
         }
 
@@ -126,7 +126,7 @@ final class PhpStanMetadataFactory implements ClassMetadataFactory
      */
     public function getManagerForClass(string $className): ?ObjectManager
     {
-        if (null !== $this->manager && $this->manager->getMetadataFactory()->hasMetadataFor($className)) {
+        if ($this->manager instanceof ObjectManager && $this->manager->getMetadataFactory()->hasMetadataFor($className)) {
             return $this->manager;
         }
 
