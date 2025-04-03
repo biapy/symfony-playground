@@ -134,11 +134,12 @@ final class PhpStanObjectManager implements ObjectManager
         $this->getManagerForClass($object::class)->refresh($object);
     }
 
+    /**
+     * @param mixed[] ...$args
+     */
     #[\Override]
-    public function flush(): void
+    public function flush(...$args): void
     {
-        $args = func_get_args();
-
         $this->getManager()->flush(...$args);
     }
 
