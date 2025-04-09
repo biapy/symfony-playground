@@ -38,6 +38,7 @@
         "symfony/string": "7.3.*",
         "symfony/translation": "7.3.*",
         "symfony/twig-bundle": "7.3.*",
+        "symfony/uid": "7.3.*",
         "symfony/ux-turbo": "^2.26.1",
         "symfony/validator": "7.3.*",
         "symfony/web-link": "7.3.*",
@@ -138,7 +139,7 @@
         }
     },
     "require-dev": {
-        "bamarni/composer-bin-plugin": "^1.8",
+        "bamarni/composer-bin-plugin": "^1.8.2",
         "phpunit/phpunit": "^9.6.23",
         "symfony/browser-kit": "7.3.*",
         "symfony/css-selector": "7.3.*",
