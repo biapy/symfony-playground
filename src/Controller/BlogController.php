@@ -156,6 +156,10 @@ final class BlogController extends AbstractController
             throw new \InvalidArgumentException('Page must be greater than 0');
         }
 
+        if ($limit < 1) {
+            throw new \InvalidArgumentException('Limit must be greater than 0');
+        }
+
         $posts = $this->getPostsList();
         $posts = array_chunk($posts, $limit, true);
 
