@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @psalm-type BlogPost = array{id: string, slug: string, title: string}
@@ -20,6 +21,8 @@ use Symfony\Component\Routing\Requirement\Requirement;
 #[Route('/blog')]
 final class BlogController extends AbstractController
 {
+    public const int POSTS_PER_PAGE = 2;
+
     /**
      * @var BlogPost[]
      */
@@ -41,19 +44,36 @@ final class BlogController extends AbstractController
         ],
     ];
 
-    #[Route('/', name: 'blog_list', methods: ['GET'])]
-    public function list(): JsonResponse
+    #[Route(
+        '/{page?}',
+        name: 'blog_list',
+        defaults: ['page' => 1],
+        requirements: ['page' => '\d+'],
+        methods: ['GET']
+    )]
+    public function list(int $page = 1): JsonResponse
     {
-        return new JsonResponse(data: $this->getPostsList());
+        try {
+            $pagePosts = $this->getPostsForPage($page);
+        } catch (\OutOfBoundsException|\InvalidArgumentException $exception) {
+            throw $this->createNotFoundException('Page not found', $exception);
+        }
+
+        $data = [
+            'page' => $page,
+            'data' => $pagePosts,
+        ];
+
+        return new JsonResponse(data: $data);
     }
 
     #[Route(
-        '/{id<'.Requirement::UID_BASE58.'>}',
+        '/post/{id<'.Requirement::UID_BASE58.'>}',
         name: 'blog_by_id',
         requirements: ['id' => Requirement::UID_BASE58],
         methods: ['GET']
     )]
-    public function post(string $id): JsonResponse
+    public function post(Uuid $id): JsonResponse
     {
         try {
             $post = $this->getPostById($id);
@@ -64,7 +84,7 @@ final class BlogController extends AbstractController
         return new JsonResponse(data: $post);
     }
 
-    #[Route('/{slug}', name: 'blog_by_slug', requirements: ['slug' => '[a-z0-9-]+'], methods: ['GET'])]
+    #[Route('/post/{slug}', name: 'blog_by_slug', requirements: ['slug' => '[a-z0-9-]+'], methods: ['GET'])]
     public function postBySlug(string $slug): JsonResponse
     {
         try {
@@ -86,14 +106,39 @@ final class BlogController extends AbstractController
     }
 
     /**
+     * @return (array<string, string>[])
+     * @psalm-return BlogPost[]
+     *
+     * @throws \InvalidArgumentException
+     * @throws \OutOfBoundsException
+     */
+    private function getPostsForPage(int $page): array
+    {
+        if ($page < 1) {
+            throw new \InvalidArgumentException('Page must be greater than 0');
+        }
+
+        $posts = $this->getPostsList();
+        $posts = array_chunk($posts, self::POSTS_PER_PAGE, true);
+
+        $pagePosts = $posts[$page - 1] ?? false;
+
+        if (false === $pagePosts) {
+            throw new \OutOfBoundsException('Page not found');
+        }
+
+        return $pagePosts;
+    }
+
+    /**
      * @return array<string, string>
      * @psalm-return BlogPost
      *
      * @throws \OutOfBoundsException
      */
-    private function getPostById(string $id): array
+    private function getPostById(Uuid $id): array
     {
-        return $this->getPostByProperty('id', $id);
+        return $this->getPostByProperty('id', $id->toBase58());
     }
 
     /**
