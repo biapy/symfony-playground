@@ -11,6 +11,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Uid\Uuid;
@@ -51,16 +52,23 @@ final class BlogController extends AbstractController
         requirements: ['page' => '\d+'],
         methods: ['GET']
     )]
-    public function list(int $page = 1): JsonResponse
+    public function list(Request $request, int $page = 1): JsonResponse
     {
+        $limit = (int) $request->query->get('limit', (string) self::POSTS_PER_PAGE);
+
+        if ($limit < 1) {
+            throw $this->createNotFoundException('Limit must be greater than 0');
+        }
+
         try {
-            $pagePostsUrls = $this->getPostsUniqueUrlsForPage($page);
+            $pagePostsUrls = $this->getPostsUniqueUrlsForPage($page, $limit);
         } catch (\OutOfBoundsException|\InvalidArgumentException $exception) {
             throw $this->createNotFoundException('Page not found', $exception);
         }
 
         $data = [
             'page' => $page,
+            'limit' => $limit,
             'data' => $pagePostsUrls,
         ];
 
@@ -99,9 +107,9 @@ final class BlogController extends AbstractController
     /**
      * @return string[]
      */
-    private function getPostsUniqueUrlsForPage(int $page): array
+    private function getPostsUniqueUrlsForPage(int $page, int $limit = self::POSTS_PER_PAGE): array
     {
-        $posts = $this->getPostsForPage($page);
+        $posts = $this->getPostsForPage($page, $limit);
 
         return $this->getPostsUniqueUrls($posts);
     }
@@ -142,14 +150,14 @@ final class BlogController extends AbstractController
      * @throws \InvalidArgumentException
      * @throws \OutOfBoundsException
      */
-    private function getPostsForPage(int $page): array
+    private function getPostsForPage(int $page, int $limit = self::POSTS_PER_PAGE): array
     {
         if ($page < 1) {
             throw new \InvalidArgumentException('Page must be greater than 0');
         }
 
         $posts = $this->getPostsList();
-        $posts = array_chunk($posts, self::POSTS_PER_PAGE, true);
+        $posts = array_chunk($posts, $limit, true);
 
         $pagePosts = $posts[$page - 1] ?? false;
 
