@@ -64,7 +64,7 @@ final class BlogController extends AbstractController
             'data' => $pagePostsUrls,
         ];
 
-        return new JsonResponse(data: $data);
+        return $this->json(data: $data);
     }
 
     #[Route(
@@ -81,7 +81,7 @@ final class BlogController extends AbstractController
             throw $this->createNotFoundException('Post not found', $outOfBoundsException);
         }
 
-        return new JsonResponse(data: $post);
+        return $this->json(data: $post);
     }
 
     #[Route('/post/{slug}', name: 'blog_by_slug', requirements: ['slug' => '[a-z0-9-]+'], methods: ['GET'])]
@@ -93,7 +93,7 @@ final class BlogController extends AbstractController
             throw $this->createNotFoundException('Post not found', $outOfBoundsException);
         }
 
-        return new JsonResponse(data: $post);
+        return $this->json(data: $post);
     }
 
     /**
