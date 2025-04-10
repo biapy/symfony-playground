@@ -1,0 +1,67 @@
+
+networks:
+  db:
+    internal: true
+  mailpit:
+    internal: true
+
+services:
+  devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ../..:/workspaces:cached
+    networks:
+      - mailpit
+      - db
+    depends_on:
+      - db
+      - mailpit
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+    environment:
+      DATABASE_URL: "postgres://postgres:password123@db/symfony-playground?serverVersion=17&charset=utf8"
+      MAILER_DSN: "smtp://mailpit:1025/?verify_peer=0"
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: "password123"
+    networks:
+      - db
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      # - ../var/devcontainer/data/postgres:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "password123"
+    depends_on:
+      - db
+    networks:
+      - db
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      # - ../var/devcontainer/data/pgadmin:/var/lib/pgadmin
+      - ./etc/pgadmin4/servers.json:/pgadmin4/servers.json:ro
+  mailpit:
+    # Mailpit service
+    image: axllent/mailpit:latest
+    networks:
+      - default # Connect to the default network, to allow forwarding emails to their final destination
+      - mailpit
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      # - ../var/devcontainer/data/mailpit:/data
+    restart: unless-stopped # Restart the service on failure.

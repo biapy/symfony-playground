@@ -1,0 +1,82 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/php
+{
+  "name": "PHP",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  // "image": "docker pull mcr.microsoft.com/devcontainers/php:dev-8.3",
+  "dockerComposeFile": "compose.yml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts",
+      "installYarnUsingApt": true
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    // Installs mcfly, which replaces your shell history with an intelligent search engine .
+    "ghcr.io/ChristopherMacGown/devcontainer-features/mcfly:1": {},
+    "ghcr.io/schlich/devcontainer-features/starship:0": {}
+  },
+  "mounts": [
+    // Mount Git configuration imports from the host to the container.
+    "source=${localEnv:HOME}/.config/git,target=/home/vscode/.config/git,type=bind,consistency=cached",
+    // Persist command history between sessions in the container.
+    "source=symfony-playground-bashhistory,target=/commandhistory,type=volume"
+  ],
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // "GitHub.copilot",
+        // "GitHub.copilot-chat",
+        "eamodio.gitlens",
+        "sleistner.vscode-fileutils",
+        "nhoizey.gremlins",
+        "EditorConfig.EditorConfig",
+        // "aaron-bond.better-comments",
+        // "usernamehw.errorlens",
+        "mikestead.dotenv",
+        "vivaxy.vscode-conventional-commits",
+        "joshbolduc.commitlint",
+        "redhat.vscode-yaml",
+        "DEVSENSE.composer-php-vscode",
+        "SanderRonde.phpstan-vscode",
+        "junstyle.php-cs-fixer",
+        "ecodes.vscode-phpmd",
+        "xdebug.php-debug",
+        "neilbrayfield.php-docblocker",
+        "zobo.php-intellisense",
+        "ValeryanM.vscode-phpsab",
+        "recca0120.vscode-phpunit",
+        "neilbrayfield.php-docblocker",
+        "muath-ye.composer-Intelephense",
+        "MehediDracula.php-namespace-resolver",
+        "ikappas.composer",
+        "getpsalm.psalm-vscode-plugin",
+        // report false positive
+        // "DEVSENSE.intelli-php-vscode",
+        "DEVSENSE.profiler-php-vscode",
+        "DEVSENSE.phptools-vscode"
+      ]
+    }
+  },
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // Tip: use a Caddy or NGINX reverse proxy in the devcontainer to expose ports from other containers.
+  // To expose ports to local network, add this setting to VS Code's user settings:
+  // "remote.localPortHost": "allInterfaces"
+  "forwardPorts": [
+    // "8025:8025" // Mailpit
+  ],
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
+  "postCreateCommand": "bash ./.devcontainer/bin/postCreateCommand.sh"
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}
