@@ -54,14 +54,14 @@ final class BlogController extends AbstractController
     public function list(int $page = 1): JsonResponse
     {
         try {
-            $pagePosts = $this->getPostsForPage($page);
+            $pagePostsUrls = $this->getPostsUniqueUrlsForPage($page);
         } catch (\OutOfBoundsException|\InvalidArgumentException $exception) {
             throw $this->createNotFoundException('Page not found', $exception);
         }
 
         $data = [
             'page' => $page,
-            'data' => $pagePosts,
+            'data' => $pagePostsUrls,
         ];
 
         return new JsonResponse(data: $data);
@@ -94,6 +94,36 @@ final class BlogController extends AbstractController
         }
 
         return new JsonResponse(data: $post);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getPostsUniqueUrlsForPage(int $page): array
+    {
+        $posts = $this->getPostsForPage($page);
+
+        return $this->getPostsUniqueUrls($posts);
+    }
+
+    /**
+     * @param (array<string, string>[]) $posts
+     * @psalm-param BlogPost[] $posts
+     *
+     * @return string[]
+     */
+    private function getPostsUniqueUrls(array $posts): array
+    {
+        return array_map($this->getPostUniqueUrl(...), $posts);
+    }
+
+    /**
+     * @param array<string, string> $post
+     * @psalm-param BlogPost $post
+     */
+    private function getPostUniqueUrl(array $post): string
+    {
+        return $this->generateUrl('blog_by_id', ['id' => $post['id']]);
     }
 
     /**
