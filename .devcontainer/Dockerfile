@@ -10,12 +10,14 @@ ARG SYMFONY_CLI_VERSION
 ARG NODE_VERSION
 
 # Install command-line tools
+ADD https://github.com/dandavison/delta/releases/download/0.18.2/git-delta_0.18.2_amd64.deb /tmp/git-delta.deb
 RUN apt-get 'update' && export DEBIAN_FRONTEND=noninteractive \
 	&& apt-get --assume-yes install --no-install-recommends  'git' 'wget' 'gosu' \
 	'ca-certificates' 'curl' 'fd-find' 'ripgrep' 'jq' 'unzip' 'zip' 'fzf' \
 	'neovim' 'supervisor' \
+	&& apt-get --assume-yes install --no-install-recommends '/tmp/git-delta.deb' \
 	&& apt-get 'clean' \
-	&& rm -rf '/var/lib/apt/lists/'*
+	&& rm -rf '/var/lib/apt/lists/'* '/tmp/git-delta.deb'
 
 # PHP configuration
 COPY ./docker/php-conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
