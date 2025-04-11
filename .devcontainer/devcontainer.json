@@ -72,7 +72,7 @@
   // To expose ports to local network, add this setting to VS Code's user settings:
   // "remote.localPortHost": "allInterfaces"
   "forwardPorts": [
-    // "8025:8025" // Mailpit
+    80 // forward port 80 in the container (Nginx reverse proxy)
   ],
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"

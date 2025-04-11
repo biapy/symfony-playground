@@ -9,15 +9,33 @@ FROM mcr.microsoft.com/devcontainers/php:${VARIANT}
 ARG SYMFONY_CLI_VERSION
 ARG NODE_VERSION
 
-COPY ./php-conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
-COPY ./php-conf.d/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
-
 # Install command-line tools
 RUN apt-get 'update' && export DEBIAN_FRONTEND=noninteractive \
-	&& apt-get --assume-yes install --no-install-recommends  'git' 'wget' \
+	&& apt-get --assume-yes install --no-install-recommends  'git' 'wget' 'gosu' \
 	'ca-certificates' 'curl' 'fd-find' 'ripgrep' 'jq' 'unzip' 'zip' 'fzf' \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
+	'neovim' 'supervisor' \
+	&& apt-get 'clean' \
+	&& rm -rf '/var/lib/apt/lists/'*
+
+# PHP configuration
+COPY ./docker/php-conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
+COPY ./docker/php-conf.d/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+# Apache2 hosts
+COPY ./docker/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./docker/apache2/sites-available/pgadmin.conf /etc/apache2/sites-available/pgadmin.conf
+COPY ./docker/apache2/sites-available/mailpit.conf /etc/apache2/sites-available/mailpit.conf
+COPY ./docker/apache2/sites-available/symfony-playground.conf /etc/apache2/sites-available/symfony-playground.conf
+
+RUN a2enmod proxy proxy_http \
+	&& a2ensite pgadmin.conf mailpit.conf symfony-playground.conf
+
+# Supervisor configuration
+COPY ./docker/supervisord/apache2.conf /etc/supervisor/conf.d/apache2.conf
+
+# Custom entrypoint
+COPY ./docker/bin/docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
+RUN chmod +x /usr/local/bin/docker-php-entrypoint
 
 # Install Symfony CLI
 RUN set -eux \
@@ -60,6 +78,9 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE='/commandhist
 	&& chown -R "vscode" "/commandhistory/vscode" \
 	&& echo "${SNIPPET}" >> "/home/vscode/.bashrc" \
 	&& chown "vscode" "/home/vscode/.bashrc"
+
+# Add vscode user to adm group for access to nginx logs
+RUN usermod --append --groups 'adm' 'vscode'
 
 USER vscode
 
