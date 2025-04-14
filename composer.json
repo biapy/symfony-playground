@@ -110,7 +110,7 @@
         "ci:rector": "@ci:code-quality:rector",
         "ci:code-quality:rector": "php tools/rector/vendor/bin/rector process --dry-run",
         "ci:phpcs": "@ci:code-quality:phpcs",
-        "ci:code-quality:phpcs": "php tools/phpcs/vendor/bin/phpcs --standard=./phpcs.dist.xml",
+        "ci:code-quality:phpcs": "php tools/phpcs/vendor/bin/phpcs --standard=./phpcs.xml.dist",
         "ci:phpmd": "@ci:code-quality:phpmd",
         "ci:code-quality:phpmd": "php tools/phpmd/vendor/bin/phpmd --cache --color ./src ansi ./phpmd.dist.xml",
         "ci:phpstan": "@ci:static-analysis:phpstan",
