@@ -29,4 +29,11 @@
         <extension name=".twig"
             checker="tools/psalm/vendor/psalm/plugin-symfony/src/Twig/TemplateFileAnalyzer.php" />
     </fileExtensions>
+    <issueHandlers>
+        <ClassMustBeFinal>
+            <errorLevel type="suppress">
+                <directory name="src/Entity" />
+            </errorLevel>
+        </ClassMustBeFinal>
+    </issueHandlers>
 </psalm>
