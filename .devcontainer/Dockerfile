@@ -19,6 +19,10 @@ RUN apt-get 'update' && export DEBIAN_FRONTEND=noninteractive \
 	&& apt-get 'clean' \
 	&& rm -rf '/var/lib/apt/lists/'* '/tmp/git-delta.deb'
 
+# Install uv
+# see https://docs.astral.sh/uv/guides/integration/docker/
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
 # PHP configuration
 COPY ./docker/php-conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
 COPY ./docker/php-conf.d/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
@@ -85,6 +89,10 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE='/commandhist
 RUN usermod --append --groups 'adm' 'vscode'
 
 USER vscode
+
+# install Posting (will also quickly install Python 3.13 if needed)
+# see https://github.com/darrenburns/posting
+RUN uv 'tool' 'install' --python '3.13' 'posting'
 
 # Add Composer global bin to PATH
 ENV PATH="/home/vscode/.composer/vendor/bin:${PATH}"
