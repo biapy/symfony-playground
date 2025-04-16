@@ -16,6 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV7;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: BlogPostRepository::class)]
@@ -26,9 +27,10 @@ class BlogPost implements \Stringable
     use TimestampableEntity;
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    private Uuid $id;
+    private UuidV7 $id;
 
     #[ORM\Column(length: 255, unique: true, nullable: true)]
     #[Gedmo\Slug(fields: ['title'], unique: true)]
@@ -53,7 +55,7 @@ class BlogPost implements \Stringable
         return $this->title;
     }
 
-    public function getId(): Uuid
+    public function getId(): UuidV7
     {
         return $this->id;
     }
