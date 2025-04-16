@@ -58,4 +58,27 @@ final class BlogPostRepository extends ServiceEntityRepository
 
         return $result;
     }
+
+    /**
+     * @return BlogPost[]
+     */
+    public function findByPage(int $page, int $limit): array
+    {
+        if ($page < 1) {
+            throw new \InvalidArgumentException('Page must be greater than 0');
+        }
+
+        if ($limit < 1) {
+            throw new \InvalidArgumentException('Limit must be greater than 0');
+        }
+
+        $qb = $this->createQueryBuilder('b');
+        $qb->setFirstResult(($page - 1) * $limit);
+        $qb->setMaxResults($limit);
+
+        /** @var BlogPost[] $posts */
+        $posts = $qb->getQuery()->getResult();
+
+        return $posts;
+    }
 }
