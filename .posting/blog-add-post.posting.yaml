@@ -1,0 +1,14 @@
+name: 'Blog: add post'
+method: POST
+url: http://localhost/blog/add
+body:
+  content: |-
+    {
+      "title": "A new blog post!",
+      "published": "2025-04-16 08:02:00",
+      "content": "Hello there!"
+    }
+  content_type: application/json
+headers:
+- name: content-type
+  value: application/json
