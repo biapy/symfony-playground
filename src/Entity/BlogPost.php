@@ -20,7 +20,7 @@ use Symfony\Component\Uid\UuidV7;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: BlogPostRepository::class)]
-#[Broadcast]
+// #[Broadcast]
 #[Gedmo\Loggable]
 class BlogPost implements \Stringable
 {
