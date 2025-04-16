@@ -9,52 +9,41 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\BlogPost;
+use App\Repository\BlogPostRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Uid\Uuid;
 
-/**
- * @psalm-type BlogPost = array{id: string, slug: string, title: string}
- */
 #[Route('/blog')]
 final class BlogController extends AbstractController
 {
-    public const int POSTS_PER_PAGE = 2;
-
-    /**
-     * @var BlogPost[]
-     */
-    private const array POSTS = [
-        [
-            'id' => '1CMxiFfxpwLQybxYzSK412',
-            'title' => 'Hello World',
-            'slug' => 'hello-world',
-        ],
-        [
-            'id' => '1CMxiFfxpwLQybxYzSNRcJ',
-            'title' => 'This is another Post',
-            'slug' => 'another-post',
-        ],
-        [
-            'id' => '1CMxiFfxpwLQybxYzSPSep',
-            'title' => 'This is the last example',
-            'slug' => 'last-example',
-        ],
-    ];
+    public function __construct(
+        private readonly BlogPostRepository $blogPostRepository,
+        #[Autowire('%app.blog.posts_per_page%')]
+        private readonly int $postPerPage,
+    ) {
+    }
 
     #[Route(
         '/{page?}',
         name: 'blog_list',
         defaults: ['page' => 1],
         requirements: ['page' => '\d+'],
-        methods: ['GET']
+        methods: ['GET'],
+        format: 'json',
     )]
     public function list(Request $request, int $page = 1): JsonResponse
     {
-        $limit = (int) $request->query->get('limit', (string) self::POSTS_PER_PAGE);
+        $limit = (int) $request->query->get('limit', (string) $this->postPerPage);
 
         if ($limit < 1) {
             throw $this->createNotFoundException('Limit must be greater than 0');
@@ -62,8 +51,10 @@ final class BlogController extends AbstractController
 
         try {
             $pagePostsUrls = $this->getPostsUniqueUrlsForPage($page, $limit);
-        } catch (\OutOfBoundsException|\InvalidArgumentException $exception) {
-            throw $this->createNotFoundException('Page not found', $exception);
+        } catch (\OutOfBoundsException $outOfBoundsException) {
+            throw $this->createNotFoundException('Page not found', previous: $outOfBoundsException);
+        } catch (\InvalidArgumentException $invalidArgumentException) {
+            throw $this->createNotFoundException($invalidArgumentException->getMessage(), previous: $invalidArgumentException);
         }
 
         $data = [
@@ -79,35 +70,57 @@ final class BlogController extends AbstractController
         '/post/{id<'.Requirement::UID_BASE58.'>}',
         name: 'blog_by_id',
         requirements: ['id' => Requirement::UID_BASE58],
-        methods: ['GET']
+        methods: ['GET'],
+        format: 'json',
     )]
     public function post(Uuid $id): JsonResponse
     {
         try {
             $post = $this->getPostById($id);
-        } catch (\OutOfBoundsException $outOfBoundsException) {
-            throw $this->createNotFoundException('Post not found', $outOfBoundsException);
+        } catch (NoResultException $noResultException) {
+            throw $this->createNotFoundException('Post not found', $noResultException);
         }
 
         return $this->json(data: $post);
     }
 
-    #[Route('/post/{slug}', name: 'blog_by_slug', requirements: ['slug' => '[a-z0-9-]+'], methods: ['GET'])]
+    #[Route(
+        '/post/{slug}',
+        name: 'blog_by_slug',
+        requirements: ['slug' => '[a-z0-9-]+'],
+        methods: ['GET'],
+        format: 'json',
+    )]
     public function postBySlug(string $slug): JsonResponse
     {
         try {
             $post = $this->getPostBySlug($slug);
-        } catch (\OutOfBoundsException $outOfBoundsException) {
-            throw $this->createNotFoundException('Post not found', $outOfBoundsException);
+        } catch (NoResultException $noResultException) {
+            throw $this->createNotFoundException('Post not found', $noResultException);
         }
 
         return $this->json(data: $post);
+    }
+
+    #[Route('/add', name: 'blog_add', methods: ['POST'], format: 'json')]
+    public function add(
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        Request $request,
+    ): JsonResponse {
+        $json = $request->getContent();
+        $blogPost = $serializer->deserialize($json, BlogPost::class, 'json');
+
+        $entityManager->persist($blogPost);
+        $entityManager->flush();
+
+        return $this->json($blogPost, Response::HTTP_CREATED);
     }
 
     /**
      * @return string[]
      */
-    private function getPostsUniqueUrlsForPage(int $page, int $limit = self::POSTS_PER_PAGE): array
+    private function getPostsUniqueUrlsForPage(int $page, ?int $limit = null): array
     {
         $posts = $this->getPostsForPage($page, $limit);
 
@@ -115,8 +128,7 @@ final class BlogController extends AbstractController
     }
 
     /**
-     * @param (array<string, string>[]) $posts
-     * @psalm-param BlogPost[] $posts
+     * @param BlogPost[] $posts
      *
      * @return string[]
      */
@@ -125,22 +137,9 @@ final class BlogController extends AbstractController
         return array_map($this->getPostUniqueUrl(...), $posts);
     }
 
-    /**
-     * @param array<string, string> $post
-     * @psalm-param BlogPost $post
-     */
-    private function getPostUniqueUrl(array $post): string
+    private function getPostUniqueUrl(BlogPost $post): string
     {
-        return $this->generateUrl('blog_by_id', ['id' => $post['id']]);
-    }
-
-    /**
-     * @return (array<string, string>[])
-     * @psalm-return BlogPost[]
-     */
-    private function getPostsList(): array
-    {
-        return self::POSTS;
+        return $this->generateUrl('blog_by_id', ['id' => $post->getId()->toBase58()]);
     }
 
     /**
@@ -150,8 +149,10 @@ final class BlogController extends AbstractController
      * @throws \InvalidArgumentException
      * @throws \OutOfBoundsException
      */
-    private function getPostsForPage(int $page, int $limit = self::POSTS_PER_PAGE): array
+    private function getPostsForPage(int $page, ?int $limit = null): array
     {
+        $limit ??= $this->postPerPage;
+
         if ($page < 1) {
             throw new \InvalidArgumentException('Page must be greater than 0');
         }
@@ -160,61 +161,22 @@ final class BlogController extends AbstractController
             throw new \InvalidArgumentException('Limit must be greater than 0');
         }
 
-        $posts = $this->getPostsList();
-        $posts = array_chunk($posts, $limit, true);
+        $pagePosts = $this->blogPostRepository->findByPage($page, $limit);
 
-        $pagePosts = $posts[$page - 1] ?? false;
-
-        if (false === $pagePosts) {
+        if ([] === $pagePosts) {
             throw new \OutOfBoundsException('Page not found');
         }
 
         return $pagePosts;
     }
 
-    /**
-     * @return array<string, string>
-     * @psalm-return BlogPost
-     *
-     * @throws \OutOfBoundsException
-     */
-    private function getPostById(Uuid $id): array
+    private function getPostById(Uuid $id): BlogPost
     {
-        return $this->getPostByProperty('id', $id->toBase58());
+        return $this->blogPostRepository->findOneById($id);
     }
 
-    /**
-     * @return array<string, string>
-     * @psalm-return BlogPost
-     *
-     * @throws \OutOfBoundsException
-     */
-    private function getPostBySlug(string $slug): array
+    private function getPostBySlug(string $slug): BlogPost
     {
-        return $this->getPostByProperty('slug', $slug);
-    }
-
-    /**
-     * @return array<string, string>
-     * @psalm-return BlogPost
-     *
-     * @throws \OutOfBoundsException
-     */
-    private function getPostByProperty(string $property, string $value): array
-    {
-        /**
-         * @var array<string, string>|null $post
-         * @psalm-var BlogPost|null $post
-         */
-        $post = array_find(
-            $this->getPostsList(),
-            fn (array $post): bool => $post[$property] === $value
-        );
-
-        if (is_array($post)) {
-            return $post;
-        }
-
-        throw new \OutOfBoundsException(sprintf('Post with %s "%s" not found', $property, $value));
+        return $this->blogPostRepository->findOneBySlug($slug);
     }
 }
