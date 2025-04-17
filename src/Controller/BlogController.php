@@ -73,7 +73,7 @@ final class BlogController extends AbstractController
         format: 'json',
     )]
     public function post(
-        #[MapEntity()]
+        #[MapEntity(message: 'Post not found')]
         BlogPost $post,
     ): JsonResponse {
         return $this->json(data: $post);
@@ -87,7 +87,7 @@ final class BlogController extends AbstractController
         format: 'json',
     )]
     public function postBySlug(
-        #[MapEntity(mapping: ['slug' => 'slug'])]
+        #[MapEntity(mapping: ['slug' => 'slug'], message: 'Post not found')]
         BlogPost $post,
     ): JsonResponse {
         return $this->json(data: $post);
