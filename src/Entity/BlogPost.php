@@ -19,8 +19,10 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV7;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
+/**
+ * add #[Broadcast] to enable broadcasting of this entity by Mercure for Turbo Streams.
+ */
 #[ORM\Entity(repositoryClass: BlogPostRepository::class)]
-// #[Broadcast]
 #[Gedmo\Loggable]
 class BlogPost implements \Stringable
 {
