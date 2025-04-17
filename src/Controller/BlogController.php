@@ -10,7 +10,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\BlogPost;
+use App\Form\Model\BlogPostModel;
 use App\Repository\BlogPostRepository;
+use AutoMapper\AutoMapperInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,9 +20,10 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/blog')]
 final class BlogController extends AbstractController
@@ -95,13 +98,15 @@ final class BlogController extends AbstractController
 
     #[Route('/add', name: 'blog_add', methods: ['POST'], format: 'json')]
     public function add(
-        SerializerInterface $serializer,
+        AutoMapperInterface $autoMapper,
         EntityManagerInterface $entityManager,
-        Request $request,
+        #[MapRequestPayload()]
+        BlogPostModel $blogPostData,
     ): JsonResponse {
-        $json = $request->getContent();
-        $blogPost = $serializer->deserialize($json, BlogPost::class, 'json');
-
+        $blogPost = $autoMapper->map($blogPostData, BlogPost::class);
+        if (!$blogPost instanceof BlogPost) {
+            throw new UnprocessableEntityHttpException('Failed to map data to Blog post');
+        }
         $entityManager->persist($blogPost);
         $entityManager->flush();
 
