@@ -12,7 +12,7 @@ namespace App\Controller;
 use App\Entity\BlogPost;
 use App\Repository\BlogPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NoResultException;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Uid\Uuid;
 
 #[Route('/blog')]
 final class BlogController extends AbstractController
@@ -73,14 +72,10 @@ final class BlogController extends AbstractController
         methods: ['GET'],
         format: 'json',
     )]
-    public function post(Uuid $id): JsonResponse
-    {
-        try {
-            $post = $this->getPostById($id);
-        } catch (NoResultException $noResultException) {
-            throw $this->createNotFoundException('Post not found', $noResultException);
-        }
-
+    public function post(
+        #[MapEntity()]
+        BlogPost $post,
+    ): JsonResponse {
         return $this->json(data: $post);
     }
 
@@ -91,14 +86,10 @@ final class BlogController extends AbstractController
         methods: ['GET'],
         format: 'json',
     )]
-    public function postBySlug(string $slug): JsonResponse
-    {
-        try {
-            $post = $this->getPostBySlug($slug);
-        } catch (NoResultException $noResultException) {
-            throw $this->createNotFoundException('Post not found', $noResultException);
-        }
-
+    public function postBySlug(
+        #[MapEntity(mapping: ['slug' => 'slug'])]
+        BlogPost $post,
+    ): JsonResponse {
         return $this->json(data: $post);
     }
 
@@ -168,15 +159,5 @@ final class BlogController extends AbstractController
         }
 
         return $pagePosts;
-    }
-
-    private function getPostById(Uuid $id): BlogPost
-    {
-        return $this->blogPostRepository->findOneById($id);
-    }
-
-    private function getPostBySlug(string $slug): BlogPost
-    {
-        return $this->blogPostRepository->findOneBySlug($slug);
     }
 }
