@@ -1,0 +1,6 @@
+name: 'Blog: delete post'
+method: DELETE
+url: http://localhost/blog/post/{id}
+params:
+- name: id
+  value: 1CNDqnKjeep6sfg5aX9bDv
