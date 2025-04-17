@@ -69,7 +69,7 @@ final class BlogController extends AbstractController
     }
 
     #[Route(
-        '/post/{id<'.Requirement::UID_BASE58.'>}',
+        '/post/{id}',
         name: 'blog_by_id',
         requirements: ['id' => Requirement::UID_BASE58],
         methods: ['GET'],
@@ -111,6 +111,23 @@ final class BlogController extends AbstractController
         $entityManager->flush();
 
         return $this->json($blogPost, Response::HTTP_CREATED);
+    }
+
+    #[Route(
+        '/post/{id}',
+        name: 'blog_delete',
+        requirements: ['id' => Requirement::UID_BASE58],
+        methods: ['DELETE'],
+        format: 'json',
+    )]
+    public function delete(
+        EntityManagerInterface $entityManager,
+        BlogPost $post,
+    ): JsonResponse {
+        $entityManager->remove($post);
+        $entityManager->flush();
+
+        return $this->json(null, status: Response::HTTP_NO_CONTENT);
     }
 
     /**
