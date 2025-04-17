@@ -80,14 +80,14 @@ final class BlogController extends AbstractController
     }
 
     #[Route(
-        '/post/{slug}',
+        '/post/{slug:post}',
         name: 'blog_by_slug',
         requirements: ['slug' => '[a-z0-9-]+'],
         methods: ['GET'],
         format: 'json',
     )]
     public function postBySlug(
-        #[MapEntity(mapping: ['slug' => 'slug'], message: 'Post not found')]
+        #[MapEntity(message: 'Post not found')]
         BlogPost $post,
     ): JsonResponse {
         return $this->json(data: $post);
