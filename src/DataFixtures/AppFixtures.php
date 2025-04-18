@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @copyright 2025 Biapy
  * @license MIT
  */
+
+declare(strict_types=1);
 
 namespace App\DataFixtures;
 
@@ -13,8 +13,9 @@ use App\Entity\BlogPost;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class AppFixtures extends Fixture
+final class AppFixtures extends Fixture
 {
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         // $product = new Product();
