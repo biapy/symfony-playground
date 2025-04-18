@@ -14,7 +14,7 @@ use AutoMapper\Attribute\Mapper;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Mapper(source: BlogPost::class, target: BlogPost::class, dateTimeFormat: 'Y-m-d H:i:s')]
-class BlogPostModel
+final class BlogPostModel
 {
     public function __construct(
         #[Assert\NotBlank]
