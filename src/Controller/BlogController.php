@@ -107,6 +107,7 @@ final class BlogController extends AbstractController
         if (!$blogPost instanceof BlogPost) {
             throw new UnprocessableEntityHttpException('Failed to map data to Blog post');
         }
+
         $entityManager->persist($blogPost);
         $entityManager->flush();
 
