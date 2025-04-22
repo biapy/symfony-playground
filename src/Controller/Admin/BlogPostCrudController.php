@@ -34,4 +34,17 @@ final class BlogPostCrudController extends AbstractCrudController
                 ->setHelp('Date and time of publication'),
         ];
     }
+
+    #[\Override]
+    public function createEntity(string $entityFqcn): BlogPost
+    {
+        unset($entityFqcn);
+
+        $blogPost = new BlogPost(
+            title: '',
+            content: '',
+        );
+
+        return $blogPost;
+    }
 }
