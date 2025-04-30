@@ -18,9 +18,9 @@
       "installYarnUsingApt": true
     },
     "ghcr.io/devcontainers/features/git:1": {},
-    // Installs mcfly, which replaces your shell history with an intelligent search engine .
-    "ghcr.io/ChristopherMacGown/devcontainer-features/mcfly:1": {},
-    "ghcr.io/schlich/devcontainer-features/starship:0": {}
+    "ghcr.io/schlich/devcontainer-features/starship:0": {},
+    // Installs mcfly, which replaces your shell history with an intelligent search engine.
+    "ghcr.io/ChristopherMacGown/devcontainer-features/mcfly:1": {}
   },
   "mounts": [
     // Mount Git configuration imports from the host to the container.
@@ -72,8 +72,15 @@
   // To expose ports to local network, add this setting to VS Code's user settings:
   // "remote.localPortHost": "allInterfaces"
   "forwardPorts": [
-    80 // forward port 80 in the container (Nginx reverse proxy)
+    56789 // forward port 56789 in the container (Apache2 reverse proxy)
   ],
+  "portsAttributes": {
+    "56789": {
+      "label": "Symfony Playground - Web server port",
+      "requireLocalPort": true,
+      "onAutoForward": "openBrowser"
+    }
+  },
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
   "postCreateCommand": "bash ./.devcontainer/bin/postCreateCommand.sh"
