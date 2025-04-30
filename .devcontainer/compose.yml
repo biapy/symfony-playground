@@ -26,7 +26,14 @@ services:
     environment:
       DATABASE_URL: "postgres://postgres:password123@db/symfony-playground?serverVersion=17&charset=utf8"
       MAILER_DSN: "smtp://mailpit:1025/?verify_peer=0"
-
+  homer:
+    image: b4bz/homer:latest
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./etc/homer:/www/assets # Make sure your local config directory exists
+    environment:
+      - INIT_ASSETS=0
   db:
     image: postgres:17
     restart: unless-stopped

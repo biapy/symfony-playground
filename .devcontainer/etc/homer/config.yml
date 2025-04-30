@@ -1,0 +1,35 @@
+---
+# Homepage configuration
+# See https://fontawesome.com/search for icons options
+
+title: "Symfony Playground"
+subtitle: "Dashboard"
+# icon: "fas fa-skull-crossbones" # Optional icon
+
+header: true
+
+# Optional theme customization
+theme: classic
+
+# Services
+# First level array represent a group.
+# Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
+services:
+  - name: "Applications"
+    icon: "fas fa-cloud"
+    items:
+      - name: "Symfony Playground app"
+        logo: "assets/icons/symfony.svg"
+        subtitle: "View the Symfony Playground application"
+        tag: "symfony"
+        url: "http://app.symfony-playground.localhost:56789"
+      - name: "PgAdmin"
+        logo: "assets/icons/pgadmin.svg"
+        subtitle: "Manage PostgreSQL databases"
+        tag: "database"
+        url: "http://pgadmin.symfony-playground.localhost:56789"
+      - name: "Mailpit"
+        logo: "assets/icons/mailpit.svg"
+        subtitle: "View outgoing emails"
+        tag: "email"
+        url: "http://mailpit.symfony-playground.localhost:56789"

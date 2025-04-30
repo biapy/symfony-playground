@@ -27,14 +27,16 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 COPY ./docker/php-conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
 COPY ./docker/php-conf.d/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-# Apache2 hosts
+# Apache2 configuration
+COPY ./docker/apache2/ports.conf /etc/apache2/ports.conf
 COPY ./docker/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./docker/apache2/sites-available/homer.conf /etc/apache2/sites-available/homer.conf
 COPY ./docker/apache2/sites-available/pgadmin.conf /etc/apache2/sites-available/pgadmin.conf
 COPY ./docker/apache2/sites-available/mailpit.conf /etc/apache2/sites-available/mailpit.conf
 COPY ./docker/apache2/sites-available/symfony-playground.conf /etc/apache2/sites-available/symfony-playground.conf
 
 RUN a2enmod proxy proxy_http \
-	&& a2ensite pgadmin.conf mailpit.conf symfony-playground.conf
+	&& a2ensite homer.conf pgadmin.conf mailpit.conf symfony-playground.conf
 
 # Supervisor configuration
 COPY ./docker/supervisord/apache2.conf /etc/supervisor/conf.d/apache2.conf
