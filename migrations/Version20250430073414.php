@@ -59,7 +59,7 @@ final class Version20250430073414 extends AbstractMigration
         SQL);
         $this->addSql(<<<'SQL'
             INSERT INTO "user" (id, display_name, email, password_hash, created_at, updated_at) VALUES (
-                'ecf98ac0-02d6-54df-8ac6-c7c8894c3953', 'None', 'none@localhost', '', NOW(), NOW()
+                'df084faf-ce65-5fda-b342-3475a281ee37', 'None', 'none@none.localhost', '', NOW(), NOW()
             )
         SQL);
         $this->addSql(<<<'SQL'
@@ -69,7 +69,7 @@ final class Version20250430073414 extends AbstractMigration
             ALTER TABLE comment ADD CONSTRAINT FK_9474526CF675F31B FOREIGN KEY (author_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE blog_post ADD author_id UUID NOT NULL DEFAULT 'ecf98ac0-02d6-54df-8ac6-c7c8894c3953'
+            ALTER TABLE blog_post ADD author_id UUID NOT NULL DEFAULT 'df084faf-ce65-5fda-b342-3475a281ee37'
         SQL);
         $this->addSql(<<<'SQL'
             COMMENT ON COLUMN blog_post.author_id IS '(DC2Type:uuid)'
@@ -87,7 +87,7 @@ final class Version20250430073414 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE SCHEMA public
+            CREATE SCHEMA IF NOT EXISTS public
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE blog_post DROP CONSTRAINT FK_BA5AE01DF675F31B
