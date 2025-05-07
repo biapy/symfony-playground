@@ -9,7 +9,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\BlogPostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -18,11 +21,9 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV7;
 
-/**
- * add #[Broadcast] to enable broadcasting of this entity by Mercure for Turbo Streams.
- */
 #[ORM\Entity(repositoryClass: BlogPostRepository::class)]
 #[Gedmo\Loggable]
+#[ApiResource()]
 class BlogPost implements \Stringable
 {
     use TimestampableEntity;
@@ -40,14 +41,32 @@ class BlogPost implements \Stringable
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $published = null;
 
+    /**
+     * @var Collection<array-key, Comment>
+     */
+    #[ORM\OneToMany(
+        targetEntity: Comment::class,
+        mappedBy: 'blogPost',
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    #[ORM\OrderBy(['createdAt' => 'ASC'])]
+    private Collection $comments;
+
     public function __construct(
         #[ORM\Column(length: 255)]
         private string $title,
 
         #[ORM\Column(type: Types::TEXT)]
         private string $content,
+
+        #[ORM\ManyToOne(inversedBy: 'blogPosts')]
+        #[ORM\JoinColumn(nullable: false)]
+        private User $author,
     ) {
         $this->id = Uuid::v7();
+
+        $this->comments = new ArrayCollection();
     }
 
     #[\Override]
@@ -59,6 +78,11 @@ class BlogPost implements \Stringable
     public function getId(): UuidV7
     {
         return $this->id;
+    }
+
+    public function getAuthor(): User
+    {
+        return $this->author;
     }
 
     public function getTitle(): string
@@ -99,5 +123,24 @@ class BlogPost implements \Stringable
     public function setContent(string $content): void
     {
         $this->content = $content;
+    }
+
+    /**
+     * @return Comment[]
+     */
+    public function getComments(): array
+    {
+        return $this->comments->toArray();
+    }
+
+    public function addComment(Comment $comment): void
+    {
+        if ($comment->getBlogPost() !== $this) {
+            throw new \LogicException('Comment does not belong to this blog post');
+        }
+
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+        }
     }
 }
