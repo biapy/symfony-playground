@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\BlogPost;
+use App\Security\Traits\SecurityAwareTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -17,15 +18,24 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 final class BlogPostCrudController extends AbstractCrudController
 {
+    use SecurityAwareTrait;
+
     #[\Override]
     public static function getEntityFqcn(): string
     {
         return BlogPost::class;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     #[\Override]
     public function configureFields(string $pageName): iterable
     {
+        unset($pageName);
+
         return [
             TextField::new('title'),
             TextEditorField::new('content'),
@@ -40,11 +50,10 @@ final class BlogPostCrudController extends AbstractCrudController
     {
         unset($entityFqcn);
 
-        $blogPost = new BlogPost(
+        return new BlogPost(
             title: '',
             content: '',
+            author: $this->getAuthenticatedUserEntity(),
         );
-
-        return $blogPost;
     }
 }
