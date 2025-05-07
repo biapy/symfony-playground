@@ -52,6 +52,11 @@ final class DashboardController extends AbstractDashboardController
             ->setTitle('Symfony Playground');
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     #[\Override]
     public function configureMenuItems(): iterable
     {
