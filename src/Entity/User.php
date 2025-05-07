@@ -28,8 +28,6 @@ class User
     use TimestampableEntity;
 
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     private UuidV5 $id;
 
