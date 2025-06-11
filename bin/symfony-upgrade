@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+# @file symfony-upgrade.bash
+# @author Pierre-Yves Landuré < contact at biapy dot fr >
+# @brief Upgrade a Symfony project to given minor version.
+# @description
+#   `symfony-upgrade.bash` uses `yq` to edit `composer.json` file in working
+#   directory to upgrade Symfony to given minor version.
+
+script_name="${0-##*/}"
+
+# Test if file is sourced.
+# See https://stackoverflow.com/questions/2683279/how-to-detect-if-a-script-is-being-sourced
+if ! (return 0 2>'/dev/null'); then
+  # Apply The Sharat's recommendations
+  # See [Shell Script Best Practices](https://sharats.me/posts/shell-script-best-practices/)
+  set -o errexit
+  set -o nounset
+  set -o pipefail
+
+  if [[ "${TRACE-0}" == "1" ]]; then
+    set -o xtrace
+  fi
+  # cd "${script_dir}"
+fi
+
+# @description
+#   Test if given string is found in the remaining arguments.
+#
+# @arg $1 string The searched string, allow for regex syntax (excluding ^ and $).
+# @arg $@ any The contents of the list in which the string is searched.
+#
+# @exitcode 0 If string is found in list.
+# @exitcode 1 If string is not found in list, or string is missing.
+#
+# @stderr Display an error if string is missing.
+function in-list() {
+  # Must have at least one argument.
+  if [[ ${#} -eq 0 ]]; then
+    echo "Error: ${FUNCNAME[0]} requires at least one argument." >&2
+    return 1
+  fi
+
+  local search="${1-}"
+  local list=("${@:2}")
+
+  # Return error if list is empty.
+  [[ "${#list[@]}" -eq 0 ]] && return 1
+
+  local previous_ifs="${IFS}"
+  IFS='!'
+
+  local search_regexp="^.*[${IFS}]${search}[${IFS}].*\$"
+  local searched_list
+
+  # build searched list with custom separator.
+  searched_list="${IFS}${list[*]}${IFS}"
+
+  IFS="${previous_ifs}"
+
+  # Check is search is exactly matched in list.
+  if [[ "${searched_list}" =~ ${search_regexp} ]]; then
+    # Found the
+    return 0
+  fi
+
+  return 1
+}
+
+# @description
+#   Upgrade Symfony to selected minor version.
+#
+# @arg $1 string The target Symfony minor version (major.minor).
+#
+# @exitcode 0 If the project is successfully upgraded.
+# @exitcode 1 If an error occurred.
+#
+# @stderr Display an error iw an error occurred.
+function symfony-upgrade() {
+  # Check if yq is installed
+  if ! command -v yq &>/dev/null; then
+    echo "Error: yq is required to run this script." >&2
+    return 1
+  fi
+
+  # Check if composer is installed
+  if ! command -v composer &>/dev/null; then
+    echo "Error: composer is required to run this script." >&2
+    return 1
+  fi
+
+  if [[ "${#}" -ne 1 ]]; then
+    echo "Error: target version is required: ${script_name} <symfony_version>" >&2
+    return 1
+  fi
+
+  local symfony_version="${1}"
+  local composer_json="composer.json"
+
+  # Check if symfony version matches major.minor format
+  if ! [[ "${symfony_version}" =~ ^[0-9]+\.[0-9]+$ ]]; then
+    echo "Error: Symfony version must be in major.minor format." >&2
+    return 1
+  fi
+
+  # Check if composer.json exists
+  if [[ ! -f "${composer_json}" ]]; then
+    echo "Error: composer.json not found in current directory." >&2
+    return 1
+  fi
+
+  # Set Symfony version in extra.symfony.require
+  yq eval ".extra.symfony.require = \"${symfony_version}.*\"" -i "${composer_json}"
+
+  # This command list packages in require and require-dev
+  # mapfile -t 'symfony_packages' < <(
+  #  composer show --no-dev --name-only 'symfony/*'
+  #)
+
+  # List all Symfony packages
+  mapfile -t 'symfony_packages' < <(
+    yq ".require | keys" "${composer_json}" --output-format='yaml' |
+      cut --characters=3- |
+      grep '^symfony/'
+  )
+
+  # List all dev Symfony packages
+  mapfile -t 'symfony_dev_packages' < <(
+    yq ".require-dev | keys" "${composer_json}" --output-format='yaml' |
+      cut --characters=3- |
+      grep '^symfony/'
+  )
+
+  # Compute a list of symfony packages to update
+  to_update=()
+  for package in "${symfony_packages[@]}"; do
+    if in-list "${package}" "${symfony_dev_packages[@]}"; then
+      # Skip package if it's in dev packages
+      echo "Skipping ${package} as it's in composer.json dev."
+      continue
+    fi
+
+    # Check that target version is available for package.
+    if ! composer show --available --quiet "${package}" "^${symfony_version}" 2>/dev/null; then
+      # Skip package if target version is not available
+      echo "Skipping ${package} as it's not available with version ${symfony_version}."
+      continue
+    fi
+
+    echo "Adding ${package} to upgrades."
+    to_update+=("${package}:${symfony_version}.*")
+  done
+
+  # Require all packages to update
+  echo "Updating packages..."
+  composer require --no-update "${to_update[@]}"
+
+  # Compute a list of dev symfony packages to update
+  to_update=()
+  for package in "${symfony_dev_packages[@]}"; do
+    # Check that target version is available for package.
+    if ! composer show --available --quiet "${package}" "^${symfony_version}" 2>/dev/null; then
+      # Skip package if target version is not available
+      echo "Skipping ${package} as it's not available with version ${symfony_version}."
+      continue
+    fi
+
+    echo "Adding ${package} to upgrades."
+    to_update+=("${package}:${symfony_version}.*")
+  done
+
+  # Require all packages to update
+  echo "Updating dev packages..."
+  composer require --dev --no-update "${to_update[@]}"
+
+  # Update Symfony packages
+  composer update "symfony/*" --with-all-dependencies
+
+  # Clear the cache
+  rm -rf 'var/cache/'*
+
+  # Update other packages
+  composer update
+
+  # Print a message to the user
+  cat <<EOF
+Symfony project upgraded to ${symfony_version}.
+
+Upgrade Flex recipes by running:
+
+  composer recipes:update
+EOF
+
+}
+
+# Test if file is sourced.
+# See https://stackoverflow.com/questions/2683279/how-to-detect-if-a-script-is-being-sourced
+if ! (return 0 2>'/dev/null'); then
+  # File is run as script. Call function as is.
+  symfony-upgrade "${@}"
+  exit ${?}
+fi
