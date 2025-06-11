@@ -17,13 +17,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Nepada\EmailAddress\RfcEmailAddress;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV5;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource]
-class User
+class User implements PasswordAuthenticatedUserInterface, \Stringable
 {
     use TimestampableEntity;
 
@@ -33,6 +34,9 @@ class User
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $displayName = null;
+
+    #[ORM\Column(length: 128)]
+    private string $passwordHash = '';
 
     /**
      * @var Collection<array-key, BlogPost>
@@ -51,13 +55,23 @@ class User
     public function __construct(
         #[ORM\Column(type: RfcEmailAddress::class, length: 320, unique: true)]
         private RfcEmailAddress $email,
-        #[ORM\Column(length: 128)]
-        private string $passwordHash,
     ) {
         $this->id = $this->createUuidV5FromEmailAddress($email);
 
         $this->blogPosts = new ArrayCollection();
         $this->comments = new ArrayCollection();
+    }
+
+    #[\Override]
+    public function __toString(): string
+    {
+        return $this->displayName ?? $this->email->toString();
+    }
+
+    #[\Override]
+    public function getPassword(): string
+    {
+        return $this->passwordHash;
     }
 
     public function getId(): UuidV5
