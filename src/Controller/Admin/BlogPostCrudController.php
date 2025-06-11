@@ -16,6 +16,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
+/**
+ * @extends AbstractCrudController<BlogPost>
+ */
 final class BlogPostCrudController extends AbstractCrudController
 {
     use SecurityAwareTrait;
