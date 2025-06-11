@@ -61,7 +61,7 @@ class BlogPost implements \Stringable
         private string $content,
 
         #[ORM\ManyToOne(inversedBy: 'blogPosts')]
-        #[ORM\JoinColumn(nullable: false)]
+        #[ORM\JoinColumn(nullable: false, options: ['default' => 'df084faf-ce65-5fda-b342-3475a281ee37'])]
         private User $author,
     ) {
         $this->id = Uuid::v7();
