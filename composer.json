@@ -1,149 +1,151 @@
 {
-  "type": "project",
-  "license": "proprietary",
-  "minimum-stability": "stable",
-  "prefer-stable": true,
-  "require": {
-    "php": ">=8.2",
-    "ext-ctype": "*",
-    "ext-iconv": "*",
-    "doctrine/dbal": "^3.9.4",
-    "doctrine/doctrine-bundle": "^2.14",
-    "doctrine/doctrine-migrations-bundle": "^3.4.2",
-    "doctrine/orm": "^3.3.3",
-    "phpdocumentor/reflection-docblock": "^5.6.2",
-    "phpstan/phpdoc-parser": "^2.1",
-    "symfony/asset": "7.3.*",
-    "symfony/asset-mapper": "7.3.*",
-    "symfony/console": "7.3.*",
-    "symfony/doctrine-messenger": "7.3.*",
-    "symfony/dotenv": "7.3.*",
-    "symfony/expression-language": "7.3.*",
-    "symfony/flex": "^2.7.1",
-    "symfony/form": "7.3.*",
-    "symfony/framework-bundle": "7.3.*",
-    "symfony/http-client": "7.3.*",
-    "symfony/intl": "7.3.*",
-    "symfony/mailer": "7.3.*",
-    "symfony/mime": "7.3.*",
-    "symfony/monolog-bundle": "^3.10",
-    "symfony/notifier": "7.3.*",
-    "symfony/process": "7.3.*",
-    "symfony/property-access": "7.3.*",
-    "symfony/property-info": "7.3.*",
-    "symfony/runtime": "7.3.*",
-    "symfony/security-bundle": "7.3.*",
-    "symfony/serializer": "7.3.*",
-    "symfony/stimulus-bundle": "^2.26.1",
-    "symfony/string": "7.3.*",
-    "symfony/translation": "7.3.*",
-    "symfony/twig-bundle": "7.3.*",
-    "symfony/ux-turbo": "^2.26.1",
-    "symfony/validator": "7.3.*",
-    "symfony/web-link": "7.3.*",
-    "symfony/yaml": "7.3.*",
-    "twig/extra-bundle": "^2.12|^3.21",
-    "twig/twig": "^2.12|^3.21.1"
-  },
-  "config": {
-    "allow-plugins": {
-      "php-http/discovery": true,
-      "symfony/flex": true,
-      "symfony/runtime": true
+    "type": "project",
+    "license": "proprietary",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "doctrine/dbal": "^3.9.4",
+        "doctrine/doctrine-bundle": "^2.14",
+        "doctrine/doctrine-migrations-bundle": "^3.4.2",
+        "doctrine/orm": "^3.3.3",
+        "phpdocumentor/reflection-docblock": "^5.6.2",
+        "phpstan/phpdoc-parser": "^2.1",
+        "symfony/asset": "7.3.*",
+        "symfony/asset-mapper": "7.3.*",
+        "symfony/console": "7.3.*",
+        "symfony/doctrine-messenger": "7.3.*",
+        "symfony/dotenv": "7.3.*",
+        "symfony/expression-language": "7.3.*",
+        "symfony/flex": "^2.7.1",
+        "symfony/form": "7.3.*",
+        "symfony/framework-bundle": "7.3.*",
+        "symfony/http-client": "7.3.*",
+        "symfony/intl": "7.3.*",
+        "symfony/mailer": "7.3.*",
+        "symfony/mime": "7.3.*",
+        "symfony/monolog-bundle": "^3.10",
+        "symfony/notifier": "7.3.*",
+        "symfony/process": "7.3.*",
+        "symfony/property-access": "7.3.*",
+        "symfony/property-info": "7.3.*",
+        "symfony/runtime": "7.3.*",
+        "symfony/security-bundle": "7.3.*",
+        "symfony/serializer": "7.3.*",
+        "symfony/stimulus-bundle": "^2.26.1",
+        "symfony/string": "7.3.*",
+        "symfony/translation": "7.3.*",
+        "symfony/twig-bundle": "7.3.*",
+        "symfony/ux-turbo": "^2.26.1",
+        "symfony/validator": "7.3.*",
+        "symfony/web-link": "7.3.*",
+        "symfony/yaml": "7.3.*",
+        "twig/extra-bundle": "^2.12|^3.21",
+        "twig/twig": "^2.12|^3.21.1"
     },
-    "bump-after-update": true,
-    "sort-packages": true
-  },
-  "autoload": {
-    "psr-4": {
-      "App\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "App\\Tests\\": "tests/"
-    }
-  },
-  "replace": {
-    "symfony/polyfill-ctype": "*",
-    "symfony/polyfill-iconv": "*",
-    "symfony/polyfill-php72": "*",
-    "symfony/polyfill-php73": "*",
-    "symfony/polyfill-php74": "*",
-    "symfony/polyfill-php80": "*",
-    "symfony/polyfill-php81": "*",
-    "symfony/polyfill-php82": "*"
-  },
-  "scripts": {
-    "auto-scripts": {
-      "cache:clear": "symfony-cmd",
-      "assets:install %PUBLIC_DIR%": "symfony-cmd",
-      "importmap:install": "symfony-cmd"
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true,
+            "php-http/discovery": true,
+            "symfony/flex": true,
+            "symfony/runtime": true
+        },
+        "bump-after-update": true,
+        "sort-packages": true
     },
-    "post-install-cmd": [
-      "@auto-scripts"
-    ],
-    "post-update-cmd": [
-      "@auto-scripts"
-    ],
-    "ci": [
-      "@ci:security",
-      "@ci:code-quality",
-      "@ci:static-analysis"
-    ],
-    "ci:security": [
-      "@ci:security:composer-audit"
-    ],
-    "ci:code-quality": [
-      "@ci:code-quality:php-cs-fixer",
-      "@ci:code-quality:rector",
-      "@ci:code-quality:phpcs",
-      "@ci:code-quality:phpmd"
-    ],
-    "ci:sa": "@ci:static-analysis",
-    "ci:static-analysis": [
-      "@ci:static-analysis:phpstan",
-      "@ci:static-analysis:psalm"
-    ],
-    "ci:php-cs-fixer": "@ci:code-quality:php-cs-fixer",
-    "ci:code-quality:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
-    "ci:rector": "@ci:code-quality:rector",
-    "ci:code-quality:rector": "php tools/rector/vendor/bin/rector process --dry-run",
-    "ci:phpcs": "@ci:code-quality:phpcs",
-    "ci:code-quality:phpcs": "php tools/phpcs/vendor/bin/phpcs --standard=./phpcs.xml.dist",
-    "ci:phpmd": "@ci:code-quality:phpmd",
-    "ci:code-quality:phpmd": "php tools/phpmd/vendor/bin/phpmd --cache --color ./src ansi ./phpmd.dist.xml",
-    "ci:phpstan": "@ci:static-analysis:phpstan",
-    "ci:static-analysis:phpstan": "php tools/phpstan/vendor/bin/phpstan analyse",
-    "ci:psalm": "@ci:static-analysis:psalm",
-    "ci:static-analysis:psalm": "php tools/psalm/vendor/bin/psalm",
-    "ci:security:composer-audit": "composer audit",
-    "fix": [
-      "@fix:rector",
-      "@fix:php-cs-fixer"
-    ],
-    "format": "@fix:php-cs-fixer",
-    "fix:php-cs-fixer": "php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix",
-    "fix:rector": "php tools/rector/vendor/bin/rector process"
-  },
-  "conflict": {
-    "symfony/symfony": "*"
-  },
-  "extra": {
-    "symfony": {
-      "allow-contrib": false,
-      "require": "7.3.*",
-      "docker": true
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*",
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*",
+        "symfony/polyfill-php82": "*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "importmap:install": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ],
+        "ci": [
+            "@ci:security",
+            "@ci:code-quality",
+            "@ci:static-analysis"
+        ],
+        "ci:security": [
+            "@ci:security:composer-audit"
+        ],
+        "ci:code-quality": [
+            "@ci:code-quality:php-cs-fixer",
+            "@ci:code-quality:rector",
+            "@ci:code-quality:phpcs",
+            "@ci:code-quality:phpmd"
+        ],
+        "ci:sa": "@ci:static-analysis",
+        "ci:static-analysis": [
+            "@ci:static-analysis:phpstan",
+            "@ci:static-analysis:psalm"
+        ],
+        "ci:php-cs-fixer": "@ci:code-quality:php-cs-fixer",
+        "ci:code-quality:php-cs-fixer": "PHP_CS_FIXER_IGNORE_ENV=1 php vendor-bin/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "ci:rector": "@ci:code-quality:rector",
+        "ci:code-quality:rector": "php vendor-bin/rector/vendor/bin/rector process --dry-run",
+        "ci:phpcs": "@ci:code-quality:phpcs",
+        "ci:code-quality:phpcs": "php vendor-bin/phpcs/vendor/bin/phpcs --standard=./phpcs.xml.dist",
+        "ci:phpmd": "@ci:code-quality:phpmd",
+        "ci:code-quality:phpmd": "php vendor-bin/phpmd/vendor/bin/phpmd --cache --color ./src ansi ./phpmd.dist.xml",
+        "ci:phpstan": "@ci:static-analysis:phpstan",
+        "ci:static-analysis:phpstan": "php vendor-bin/phpstan/vendor/bin/phpstan analyse",
+        "ci:psalm": "@ci:static-analysis:psalm",
+        "ci:static-analysis:psalm": "php vendor-bin/psalm/vendor/bin/psalm",
+        "ci:security:composer-audit": "composer audit",
+        "fix": [
+            "@fix:rector",
+            "@fix:php-cs-fixer"
+        ],
+        "format": "@fix:php-cs-fixer",
+        "fix:php-cs-fixer": "PHP_CS_FIXER_IGNORE_ENV=1 php vendor-bin/php-cs-fixer/vendor/bin/php-cs-fixer fix",
+        "fix:rector": "php vendor-bin/rector/vendor/bin/rector process"
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "7.3.*",
+            "docker": true
+        }
+    },
+    "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.8",
+        "phpunit/phpunit": "^9.6.23",
+        "symfony/browser-kit": "7.3.*",
+        "symfony/css-selector": "7.3.*",
+        "symfony/debug-bundle": "7.3.*",
+        "symfony/maker-bundle": "^1.63",
+        "symfony/phpunit-bridge": "7.3.*",
+        "symfony/stopwatch": "7.3.*",
+        "symfony/web-profiler-bundle": "7.3.*"
     }
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^9.6.23",
-    "symfony/browser-kit": "7.3.*",
-    "symfony/css-selector": "7.3.*",
-    "symfony/debug-bundle": "7.3.*",
-    "symfony/maker-bundle": "^1.63",
-    "symfony/phpunit-bridge": "7.3.*",
-    "symfony/stopwatch": "7.3.*",
-    "symfony/web-profiler-bundle": "7.3.*"
-  }
 }
