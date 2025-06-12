@@ -44,6 +44,7 @@ add-vendor-bin-to-path "${TOOLS_FOLDER}/rector"
 add-vendor-bin-to-path "${TOOLS_FOLDER}/php-cs-fixer"
 add-vendor-bin-to-path "${TOOLS_FOLDER}/phpcs"
 add-vendor-bin-to-path "${TOOLS_FOLDER}/phpmd"
+add-vendor-bin-to-path "${TOOLS_FOLDER}/twig-cs-fixer"
 
 # Add project bin to PATH
 add-vendor-bin-to-path "${WORKSPACE_FOLDER}"

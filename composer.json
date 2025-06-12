@@ -120,7 +120,8 @@
             "@ci:code-quality:php-cs-fixer",
             "@ci:code-quality:rector",
             "@ci:code-quality:phpcs",
-            "@ci:code-quality:phpmd"
+            "@ci:code-quality:phpmd",
+            "@ci:twig-cs-fixer"
         ],
         "ci:code-quality:php-cs-fixer": "PHP_CS_FIXER_IGNORE_ENV=1 php vendor-bin/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
         "ci:code-quality:phpcs": "php vendor-bin/phpcs/vendor/bin/phpcs --standard=./phpcs.xml.dist",
@@ -143,12 +144,16 @@
         ],
         "ci:static-analysis:phpstan": "php vendor-bin/phpstan/vendor/bin/phpstan analyse",
         "ci:static-analysis:psalm": "php vendor-bin/psalm/vendor/bin/psalm",
+        "ci:twig-cs-fixer": "php vendor-bin/twig-cs-fixer/vendor/vincentlanglet/twig-cs-fixer/bin/twig-cs-fixer lint",
         "fix": [
             "@fix:rector",
-            "@fix:php-cs-fixer"
+            "@format"
         ],
         "fix:php-cs-fixer": "PHP_CS_FIXER_IGNORE_ENV=1 php vendor-bin/php-cs-fixer/vendor/bin/php-cs-fixer fix",
         "fix:rector": "php vendor-bin/rector/vendor/bin/rector process",
-        "format": "@fix:php-cs-fixer"
+        "format": [
+            "@fix:php-cs-fixer",
+            "@fix:twig-cs-fixer"
+        ]
     }
 }

@@ -6,6 +6,7 @@
 /public/bundles/
 /var/
 /vendor/
+/vendor-bin/*/vendor/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
@@ -52,8 +53,6 @@ phpstan.neon
 .php-cs-fixer.cache
 .php-cs-fixer.php
 ###< biapy/devenv-recipes:php-cs-fixer ###
-
-# End of https://www.toptal.com/developers/gitignore/api/php-cs-fixer
 
 # Twig CS fixer cache.
 /.twig-cs-fixer.cache
