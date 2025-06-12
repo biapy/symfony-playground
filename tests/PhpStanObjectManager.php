@@ -149,7 +149,6 @@ final class PhpStanObjectManager implements ObjectManager
         $this->getManagerForClass($obj::class)->initializeObject($obj);
     }
 
-    #[\Override]
     public function isUninitializedObject(mixed $value): bool
     {
         if (!is_object($value)) {
