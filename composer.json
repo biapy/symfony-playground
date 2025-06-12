@@ -90,6 +90,7 @@
         "ci": [
             "@ci:security",
             "@ci:code-quality",
+            "@ci:symfony:lint",
             "@ci:static-analysis"
         ],
         "ci:security": [
@@ -100,27 +101,43 @@
             "@ci:code-quality:rector",
             "@ci:code-quality:phpcs",
             "@ci:code-quality:phpmd",
-            "@ci:twig-cs-fixer"
+            "@ci:code-quality:twig-cs-fixer"
         ],
         "ci:sa": "@ci:static-analysis",
         "ci:static-analysis": [
             "@ci:static-analysis:phpstan",
-            "@ci:static-analysis:psalm"
+            "@ci:static-analysis:psalm",
+            "@ci:static-analysis:twigstan"
         ],
         "ci:php-cs-fixer": "@ci:code-quality:php-cs-fixer",
-        "ci:code-quality:php-cs-fixer": "PHP_CS_FIXER_IGNORE_ENV=1 php vendor-bin/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "ci:code-quality:php-cs-fixer": "PHP_CS_FIXER_IGNORE_ENV=1 php vendor/bin/php-cs-fixer fix --dry-run --diff",
         "ci:rector": "@ci:code-quality:rector",
-        "ci:code-quality:rector": "php vendor-bin/rector/vendor/bin/rector process --dry-run",
+        "ci:code-quality:rector": "php vendor/bin/rector process --dry-run",
         "ci:phpcs": "@ci:code-quality:phpcs",
-        "ci:code-quality:phpcs": "php vendor-bin/phpcs/vendor/bin/phpcs --standard=./phpcs.xml.dist",
+        "ci:code-quality:phpcs": "php vendor/bin/phpcs --standard=./phpcs.xml.dist",
         "ci:phpmd": "@ci:code-quality:phpmd",
-        "ci:code-quality:phpmd": "php vendor-bin/phpmd/vendor/bin/phpmd --cache --color ./src ansi ./phpmd.dist.xml",
+        "ci:code-quality:phpmd": "php vendor/bin/phpmd --cache --color ./src ansi ./phpmd.dist.xml",
         "ci:phpstan": "@ci:static-analysis:phpstan",
-        "ci:static-analysis:phpstan": "php vendor-bin/phpstan/vendor/bin/phpstan analyse",
+        "ci:static-analysis:phpstan": "php vendor/bin/phpstan analyse",
         "ci:psalm": "@ci:static-analysis:psalm",
-        "ci:static-analysis:psalm": "php vendor-bin/psalm/vendor/bin/psalm",
+        "ci:static-analysis:psalm": "php vendor/bin/psalm",
         "ci:security:composer-audit": "composer audit",
-        "ci:twig-cs-fixer": "php vendor-bin/twig-cs-fixer/vendor/vincentlanglet/twig-cs-fixer/bin/twig-cs-fixer lint",
+        "ci:code-quality:twig-cs-fixer": "php vendor/bin/twig-cs-fixer lint",
+        "ci:twig-cs-fixer": "@ci:code-quality:twig-cs-fixer",
+        "ci:static-analysis:twigstan": "php vendor/bin/twigstan",
+        "ci:twigstan": "@ci:static-analysis:twigstan",
+        "ci:symfony:lint": [
+            "@ci:symfony:lint:yaml",
+            "@ci:symfony:lint:container",
+            "@ci:symfony:lint:xliff",
+            "@ci:symfony:lint:translation",
+            "@ci:symfony:lint:twig"
+        ],
+        "ci:symfony:lint:yaml": "php bin/console lint:yaml --exclude=vendor --exclude=vendor-bin .",
+        "ci:symfony:lint:container": "php bin/console lint:container",
+        "ci:symfony:lint:xliff": "php bin/console lint:xliff ./translations",
+        "ci:symfony:lint:translation": "php bin/console lint:translation",
+        "ci:symfony:lint:twig": "php bin/console lint:twig --excludes=vendor/ --excludes=vendor-bin/ .",
         "fix": [
             "@fix:rector",
             "@format"
@@ -130,7 +147,7 @@
             "@fix:twig-cs-fixer"
         ],
         "fix:php-cs-fixer": "PHP_CS_FIXER_IGNORE_ENV=1 php vendor-bin/php-cs-fixer/vendor/bin/php-cs-fixer fix",
-        "fix:twig-cs-fixer": "php vendor-bin/twig-cs-fixer/vendor/vincentlanglet/twig-cs-fixer/bin/twig-cs-fixer lint --fix",
+        "fix:twig-cs-fixer": "php vendor/bin/twig-cs-fixer lint --fix",
         "fix:rector": "php vendor-bin/rector/vendor/bin/rector process"
     },
     "conflict": {

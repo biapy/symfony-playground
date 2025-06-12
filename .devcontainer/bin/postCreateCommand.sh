@@ -37,17 +37,10 @@ function add-vendor-bin-to-path() {
     add-to-path "${vendor_path}" || return 1
 }
 
-# Add tools to PATH
-add-vendor-bin-to-path "${TOOLS_FOLDER}/phpstan"
-add-vendor-bin-to-path "${TOOLS_FOLDER}/psalm"
-add-vendor-bin-to-path "${TOOLS_FOLDER}/rector"
-add-vendor-bin-to-path "${TOOLS_FOLDER}/php-cs-fixer"
-add-vendor-bin-to-path "${TOOLS_FOLDER}/phpcs"
-add-vendor-bin-to-path "${TOOLS_FOLDER}/phpmd"
-add-vendor-bin-to-path "${TOOLS_FOLDER}/twig-cs-fixer"
+# Add vendor/bin to PATH
+add-vendor-bin-to-path "${WORKSPACE_FOLDER}"
 
 # Add project bin to PATH
-add-vendor-bin-to-path "${WORKSPACE_FOLDER}"
 add-to-path "${WORKSPACE_FOLDER}/bin"
 
 # Clear cache and warmup
