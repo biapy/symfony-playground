@@ -30,7 +30,7 @@ class Comment
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     private UuidV7 $id;
 
-    private function __construct(
+    public function __construct(
         #[ORM\ManyToOne(inversedBy: 'comments')]
         #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
         private BlogPost $blogPost,
@@ -41,6 +41,8 @@ class Comment
         private string $content,
     ) {
         $this->id = Uuid::v7();
+
+        $blogPost->addComment($this);
     }
 
     public function getId(): UuidV7
