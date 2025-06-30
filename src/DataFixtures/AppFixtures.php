@@ -9,23 +9,24 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use Faker\Generator;
+use Faker\Factory;
 use App\Entity\BlogPost;
 use App\Entity\Comment;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker;
 use Nepada\EmailAddress\RfcEmailAddress;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class AppFixtures extends Fixture
 {
-    private readonly Faker\Generator $faker;
+    private readonly Generator $faker;
 
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
     ) {
-        $this->faker = Faker\Factory::create();
+        $this->faker = Factory::create();
     }
 
     /**
