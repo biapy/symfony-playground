@@ -56,6 +56,7 @@
         "bamarni/composer-bin-plugin": "^1.8.2",
         "doctrine/doctrine-fixtures-bundle": "^4.1",
         "easycorp/easyadmin-bundle": ">=4.24.9",
+        "fakerphp/faker": "^1.24",
         "phpunit/phpunit": "^9.6.25",
         "symfony/browser-kit": "~7.3.2",
         "symfony/css-selector": "~7.3.0",
