@@ -10,17 +10,22 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\Entity\BlogPost;
+use App\Entity\Comment;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker;
 use Nepada\EmailAddress\RfcEmailAddress;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class AppFixtures extends Fixture
 {
+    private readonly Faker\Generator $faker;
+
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
     ) {
+        $this->faker = Faker\Factory::create();
     }
 
     /**
@@ -40,23 +45,42 @@ final class AppFixtures extends Fixture
     {
         $anonymousUser = $this->getReference('anonymous_user', User::class);
 
+        foreach (range(1, 100) as $i) {
+            $blogPost = $this->createFakeBlogPost($anonymousUser);
+            $this->addCommentsToBlogPost($blogPost);
+            $manager->persist($blogPost);
+
+            $this->setReference(sprintf('blog_post_%d', $i), $blogPost);
+        }
+    }
+
+    private function createFakeBlogPost(User $author): BlogPost
+    {
         $blogPost = new BlogPost(
-            title: 'A first post!',
-            content: 'Post text!',
-            author: $anonymousUser,
+            title: $this->faker->sentence(),
+            content: $this->faker->realText(),
+            author: $author,
         );
-        $blogPost->setPublished(new \DateTimeImmutable('2025-04-01 12:00:00'));
-
-        $manager->persist($blogPost);
-
-        $blogPost = new BlogPost(
-            title: 'A second post!',
-            content: 'Post text!',
-            author: $anonymousUser,
+        $blogPost->setPublished(
+            \DateTimeImmutable::createFromInterface($this->faker->dateTimeThisYear())
         );
-        $blogPost->setPublished(new \DateTimeImmutable('2025-04-02 12:00:00'));
 
-        $manager->persist($blogPost);
+        return $blogPost;
+    }
+
+    private function addCommentsToBlogPost(BlogPost $blogPost): void
+    {
+        $anonymousUser = $this->getReference('anonymous_user', User::class);
+
+        foreach (range(1, $this->faker->randomDigitNotNull()) as $i) {
+            $comment = new Comment(
+                blogPost: $blogPost,
+                author: $anonymousUser,
+                content: $this->faker->paragraph(),
+            );
+
+            $comment->setCreatedAt($this->faker->dateTimeThisYear());
+        }
     }
 
     private function loadUsers(ObjectManager $manager): void
