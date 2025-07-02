@@ -42,14 +42,14 @@ class User implements PasswordAuthenticatedUserInterface, \Stringable
      * @var Collection<array-key, BlogPost>
      */
     #[ORM\OneToMany(targetEntity: BlogPost::class, mappedBy: 'author', cascade: ['persist'])]
-    #[ORM\OrderBy(['created_at' => 'DESC'])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $blogPosts;
 
     /**
      * @var Collection<array-key, Comment>
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author', cascade: ['persist'])]
-    #[ORM\OrderBy(['created_at' => 'DESC'])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $comments;
 
     public function __construct(
