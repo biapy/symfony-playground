@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\BlogPostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,7 +25,12 @@ use Symfony\Component\Uid\UuidV7;
 
 #[ORM\Entity(repositoryClass: BlogPostRepository::class)]
 #[Gedmo\Loggable]
-#[ApiResource()]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+    ],
+)]
 class BlogPost implements \Stringable
 {
     use TimestampableEntity;

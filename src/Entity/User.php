@@ -10,6 +10,10 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,7 +27,14 @@ use Symfony\Component\Uid\UuidV5;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(uriTemplate: '/users/{id}'),
+        new Post(),
+        new Patch(uriTemplate: '/users/{id}'),
+        new Delete(uriTemplate: '/users/{id}'),
+    ]
+)]
 class User implements PasswordAuthenticatedUserInterface, \Stringable
 {
     use TimestampableEntity;
