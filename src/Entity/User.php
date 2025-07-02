@@ -22,6 +22,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Nepada\EmailAddress\RfcEmailAddress;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV5;
 
@@ -33,7 +34,8 @@ use Symfony\Component\Uid\UuidV5;
         new Post(),
         new Patch(uriTemplate: '/users/{id}'),
         new Delete(uriTemplate: '/users/{id}'),
-    ]
+    ],
+    normalizationContext: ['groups' => ['user:read']],
 )]
 class User implements PasswordAuthenticatedUserInterface, \Stringable
 {
@@ -41,9 +43,11 @@ class User implements PasswordAuthenticatedUserInterface, \Stringable
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[Groups(['user:read'])]
     private UuidV5 $id;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $displayName = null;
 
     #[ORM\Column(length: 128)]
@@ -54,6 +58,7 @@ class User implements PasswordAuthenticatedUserInterface, \Stringable
      */
     #[ORM\OneToMany(targetEntity: BlogPost::class, mappedBy: 'author', cascade: ['persist'])]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
+    #[Groups(['user:read'])]
     private Collection $blogPosts;
 
     /**
@@ -61,6 +66,7 @@ class User implements PasswordAuthenticatedUserInterface, \Stringable
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author', cascade: ['persist'])]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
+    #[Groups(['user:read'])]
     private Collection $comments;
 
     public function __construct(
