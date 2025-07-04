@@ -23,6 +23,9 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 
+# Composer bin
+/vendor-bin/
+
 # PHP Mess Detector
 /.phpmd.result-cache.php
 
