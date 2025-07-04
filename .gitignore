@@ -46,3 +46,6 @@
 .php-cs-fixer.php
 
 # End of https://www.toptal.com/developers/gitignore/api/php-cs-fixer
+
+# Twig CS fixer cache.
+/.twig-cs-fixer.cache
