@@ -43,3 +43,28 @@
 .php-cs-fixer.php
 
 # End of https://www.toptal.com/developers/gitignore/api/php-cs-fixer
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
+
+###> biapy/devenv-recipes:composer-bin ###
+/vendor-bin/**/vendor/
+###< biapy/devenv-recipes:composer-bin ###
+
+###> biapy/devenv-recipes:phpstan ###
+phpstan.neon
+###< biapy/devenv-recipes:phpstan ###
+###> biapy/devenv-recipes:composer ###
+/vendor/
+###< biapy/devenv-recipes:composer ###
+###> biapy/devenv-recipes:php-cs-fixer ###
+.php-cs-fixer.cache
+.php-cs-fixer.php
+###< biapy/devenv-recipes:php-cs-fixer ###
