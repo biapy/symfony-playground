@@ -3,10 +3,10 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1755355634,
+        "lastModified": 1755536966,
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "85e78cbe26467a2c23c9d34869235740132d749f",
+        "rev": "062a852197de9aa96204c5b4b01d149e3c44ffb6",
         "type": "github"
       },
       "original": {
@@ -20,10 +20,10 @@
       "flake": false,
       "locked": {
         "dir": "src",
-        "lastModified": 1755489345,
+        "lastModified": 1755575671,
         "owner": "biapy",
         "repo": "devenv-recipes",
-        "rev": "b969ab6049dacdad91a4bc5f7236ecd782ae8483",
+        "rev": "d572f42aa4c383995d163c95ec54f6d5f3dff98b",
         "type": "github"
       },
       "original": {
