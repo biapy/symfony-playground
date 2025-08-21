@@ -23,29 +23,47 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 
-# Composer bin
-/vendor-bin/
-
 # PHP Mess Detector
 /.phpmd.result-cache.php
 
-# PHP CodeSniffer
-.phpcs-cache
+# Devenv
+.devenv*
+devenv.local.nix
 
-# Created by https://www.toptal.com/developers/gitignore/api/php-cs-fixer
-# Edit at https://www.toptal.com/developers/gitignore?templates=php-cs-fixer
+# direnv
+.direnv
 
-### PHP-CS-Fixer ###
-# Covers PHP CS Fixer
-# Reference: https://cs.symfony.com/
+# pre-commit
+.pre-commit-config.yaml
 
-# Generated files
+###> biapy/devenv-recipes:composer-bin ###
+/vendor-bin/**/vendor/
+###< biapy/devenv-recipes:composer-bin ###
+
+###> biapy/devenv-recipes:phpstan ###
+phpstan.neon
+###< biapy/devenv-recipes:phpstan ###
+
+###> biapy/devenv-recipes:composer ###
+/vendor/
+###< biapy/devenv-recipes:composer ###
+
+###> biapy/devenv-recipes:php-cs-fixer ###
 .php-cs-fixer.cache
-
-# Local config See: https://cs.symfony.com/doc/config.html
 .php-cs-fixer.php
+###< biapy/devenv-recipes:php-cs-fixer ###
 
 # End of https://www.toptal.com/developers/gitignore/api/php-cs-fixer
 
 # Twig CS fixer cache.
 /.twig-cs-fixer.cache
+
+###> biapy/devenv-recipes:phpcs ###
+phpcs.xml
+.phpcs.xml
+.phpcs.cache
+###< biapy/devenv-recipes:phpcs ###
+
+###> biapy/devenv-recipes:psalm ###
+psalm.xml
+###< biapy/devenv-recipes:psalm ###

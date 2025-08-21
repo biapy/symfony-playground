@@ -1,0 +1,23 @@
+{
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "mkhl.direnv",
+        "streetsidesoftware.code-spell-checker",
+        "DavidAnson.vscode-markdownlint",
+        "jnoortheen.nix-ide",
+        "brettm12345.nixfmt-vscode",
+        "DEVSENSE.composer-php-vscode",
+        "junstyle.php-cs-fixer",
+        "ValeryanM.vscode-phpsab",
+        "ecodes.vscode-phpmd",
+        "SanderRonde.phpstan-vscode",
+        "bbenoist.Nix",
+        "mkhl.direnv"
+      ]
+    }
+  },
+  "image": "ghcr.io/cachix/devenv/devcontainer:latest",
+  "overrideCommand": false,
+  "updateContentCommand": "devenv test"
+}
