@@ -2,10 +2,17 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "mkhl.direnv",
+        "streetsidesoftware.code-spell-checker",
         "DavidAnson.vscode-markdownlint",
-        "brettm12345.nixfmt-vscode",
-        "bbenoist.Nix",
         "jnoortheen.nix-ide",
+        "brettm12345.nixfmt-vscode",
+        "DEVSENSE.composer-php-vscode",
+        "junstyle.php-cs-fixer",
+        "ValeryanM.vscode-phpsab",
+        "ecodes.vscode-phpmd",
+        "SanderRonde.phpstan-vscode",
+        "bbenoist.Nix",
         "mkhl.direnv"
       ]
     }

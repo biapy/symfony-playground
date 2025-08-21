@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests;
+namespace App\Tests\PHPStan;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
@@ -149,7 +149,6 @@ final class PhpStanObjectManager implements ObjectManager
         $this->getManagerForClass($obj::class)->initializeObject($obj);
     }
 
-    #[\Override]
     public function isUninitializedObject(mixed $value): bool
     {
         if (!is_object($value)) {

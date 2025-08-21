@@ -1,7 +1,5 @@
 {
   pkgs,
-  lib,
-  config,
   inputs,
   ...
 }:
@@ -13,8 +11,8 @@
     "${inputs.devenv-recipes}/devenv-scripts.nix"
     "${inputs.devenv-recipes}/git.nix"
     "${inputs.devenv-recipes}/devcontainer.nix"
-    "${inputs.devenv-recipes}/markdown.nix"
-    "${inputs.devenv-recipes}/nix.nix"
+    "${inputs.devenv-recipes}/markdown"
+    "${inputs.devenv-recipes}/nix"
     "${inputs.devenv-recipes}/gitleaks.nix"
     "${inputs.devenv-recipes}/php"
     "${inputs.devenv-recipes}/php/symfony.nix"

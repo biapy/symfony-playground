@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests;
+namespace App\Tests\PHPStan;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
