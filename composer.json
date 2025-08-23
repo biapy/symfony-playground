@@ -9,6 +9,7 @@
         "doctrine/doctrine-bundle": "^2.15.1",
         "doctrine/doctrine-migrations-bundle": "^3.4.2",
         "doctrine/orm": "^3.5.2",
+        "martin-georgiev/postgresql-for-doctrine": "dev-ltree",
         "phpdocumentor/reflection-docblock": "^5.6.3",
         "phpstan/phpdoc-parser": "^2.2",
         "symfony/asset": "~7.3.0",
@@ -68,6 +69,12 @@
     "conflict": {
         "symfony/symfony": "*"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:biapy/postgresql-for-doctrine.git"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "autoload": {

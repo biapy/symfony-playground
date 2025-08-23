@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ada7a64a826b488286e185abf8a0853a",
+    "content-hash": "3cacaa70ebdb7ac157fd93a2cb56da6d",
     "packages": [
         {
             "name": "composer/semver",
@@ -1273,6 +1273,143 @@
                 }
             ],
             "time": "2025-03-06T22:45:56+00:00"
+        },
+        {
+            "name": "martin-georgiev/postgresql-for-doctrine",
+            "version": "dev-ltree",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/biapy/postgresql-for-doctrine.git",
+                "reference": "adf7db0c34c678959b4b981af7f45a49c23463a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/biapy/postgresql-for-doctrine/zipball/adf7db0c34c678959b4b981af7f45a49c23463a0",
+                "reference": "adf7db0c34c678959b4b981af7f45a49c23463a0",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "~2.10||~3.0||~4.0",
+                "ext-ctype": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "deptrac/deptrac": "^4.0",
+                "doctrine/orm": "~2.14||~3.0",
+                "ekino/phpstan-banned-code": "^3.0",
+                "friendsofphp/php-cs-fixer": "^3.85.1",
+                "phpstan/phpstan": "^2.1.22",
+                "phpstan/phpstan-deprecation-rules": "^2.0.3",
+                "phpstan/phpstan-doctrine": "^2.0.4",
+                "phpstan/phpstan-phpunit": "^2.0.7",
+                "phpunit/phpunit": "^10.5.48",
+                "rector/rector": "^2.1.2",
+                "symfony/cache": "^6.4||^7.0"
+            },
+            "suggest": {
+                "doctrine/orm": "~2.14||~3.0",
+                "php": "^8.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MartinGeorgiev\\": "src/MartinGeorgiev/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Fixtures\\MartinGeorgiev\\": "fixtures/MartinGeorgiev/",
+                    "Tests\\Integration\\MartinGeorgiev\\": "tests/Integration/MartinGeorgiev/",
+                    "Tests\\Unit\\MartinGeorgiev\\": "tests/Unit/MartinGeorgiev/"
+                }
+            },
+            "scripts": {
+                "deptrac": [
+                    "deptrac analyze --config-file=./ci/deptrac/config.yml --cache-file=./ci/deptrac/.cache --no-interaction --no-progress"
+                ],
+                "php-cs-fixer": [
+                    "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --config=./ci/php-cs-fixer/config.php --show-progress=none --no-interaction --diff -v"
+                ],
+                "phpstan": [
+                    "phpstan analyse --configuration=./ci/phpstan/config.neon"
+                ],
+                "phpunit": [
+                    "XDEBUG_MODE=coverage phpunit"
+                ],
+                "phpunit:unit": [
+                    "@phpunit --configuration=./ci/phpunit/config-unit.xml"
+                ],
+                "phpunit:integration": [
+                    "@phpunit --configuration=./ci/phpunit/config-integration.xml"
+                ],
+                "rector": [
+                    "rector --config=./ci/rector/config.php --ansi --no-progress-bar"
+                ],
+                "check-code-style": [
+                    "@php-cs-fixer --dry-run",
+                    "@rector --dry-run"
+                ],
+                "fix-code-style": [
+                    "@rector",
+                    "@php-cs-fixer"
+                ],
+                "run-static-analysis": [
+                    "@phpstan",
+                    "@deptrac"
+                ],
+                "run-integration-tests": [
+                    "@phpunit:integration"
+                ],
+                "run-unit-tests": [
+                    "@phpunit:unit"
+                ],
+                "run-unit-tests-with-clover": [
+                    "@phpunit:unit --coverage-clover=./var/logs/test-coverage/clover.xml"
+                ],
+                "run-all-tests": [
+                    "@run-unit-tests",
+                    "@run-integration-tests"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Georgiev",
+                    "email": "martin.georgiev@gmail.com",
+                    "role": "author"
+                }
+            ],
+            "description": "Adds PostgreSQL enhancements to Doctrine. Provides support for JSON, JSONB and some array data types. Provides functions, operators and common expressions used when working with JSON data, arrays and features related to text search.",
+            "keywords": [
+                "array data types",
+                "dbal",
+                "doctrine",
+                "json",
+                "jsonb",
+                "martin georgiev",
+                "postgres",
+                "postgresql",
+                "text search",
+                "tsvector"
+            ],
+            "support": {
+                "source": "https://github.com/biapy/postgresql-for-doctrine/tree/ltree"
+            },
+            "funding": [
+                {
+                    "type": "github",
+                    "url": "https://github.com/martin-georgiev"
+                },
+                {
+                    "type": "custom",
+                    "url": "https://github.com/sponsors/martin-georgiev"
+                }
+            ],
+            "time": "2025-08-15T06:03:25+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -10294,7 +10431,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "martin-georgiev/postgresql-for-doctrine": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
