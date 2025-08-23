@@ -2,6 +2,8 @@
 inputs:
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
+  nixpkgs-unstable:
+    url: github:nixos/nixpkgs/nixpkgs-unstable
   devenv-recipes:
     url: github:biapy/devenv-recipes?dir=src
     flake: false
