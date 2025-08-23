@@ -49,7 +49,7 @@ class MyEntity implements \Stringable
         private string $name,
 
         #[ORM\ManyToOne(targetEntity: MyEntity::class, inversedBy: 'children')]
-        private ?MyEntity $parent,
+        private ?MyEntity $parent = null,
     ) {
         $this->id = Uuid::v7();
         $this->children = new ArrayCollection();
