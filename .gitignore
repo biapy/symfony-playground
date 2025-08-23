@@ -67,3 +67,7 @@ phpcs.xml
 ###> biapy/devenv-recipes:psalm ###
 psalm.xml
 ###< biapy/devenv-recipes:psalm ###
+
+###> biapy/devenv-recipes:symfony ###
+composer-recipes-install-all
+###< biapy/devenv-recipes:symfony ###

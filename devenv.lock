@@ -3,10 +3,10 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1755878119,
+        "lastModified": 1755961020,
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "42cc33507eaf828f4e6ef80f4ed1af4cf126ff3a",
+        "rev": "abb198476023189fc45a01bd6502f5ca6ea62bd0",
         "type": "github"
       },
       "original": {
@@ -20,10 +20,10 @@
       "flake": false,
       "locked": {
         "dir": "src",
-        "lastModified": 1755843909,
+        "lastModified": 1755961511,
         "owner": "biapy",
         "repo": "devenv-recipes",
-        "rev": "9390a5b019af9658e636d88c221d5e7c45338622",
+        "rev": "40f736b20b875130027e6539e4ea95bd72eda30f",
         "type": "github"
       },
       "original": {
@@ -57,10 +57,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1755879220,
+        "lastModified": 1755960406,
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "rev": "3ff4596663c8cbbffe06d863ee4c950bce2c3b78",
+        "rev": "e891a93b193fcaf2fc8012d890dc7f0befe86ec2",
         "type": "github"
       },
       "original": {
