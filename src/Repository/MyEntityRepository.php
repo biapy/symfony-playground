@@ -49,6 +49,23 @@ final class MyEntityRepository extends ServiceEntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
+    public function findOneByName(string $name): MyEntity
+    {
+        $query = $this->createQueryBuilder('e')
+            ->andWhere('e.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery();
+
+        /** @var MyEntity $entity */
+        $entity = $query->getSingleResult();
+
+        return $entity;
+    }
+
+    /**
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
     public function findOneByPath(LtreeInterface $path): MyEntity
     {
         $query = $this->createQueryBuilder('e')
