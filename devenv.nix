@@ -1,4 +1,9 @@
-{ pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   name = "Symfony Playground";
@@ -12,10 +17,17 @@
     "${inputs.devenv-recipes}/gitleaks.nix"
     "${inputs.devenv-recipes}/php"
     "${inputs.devenv-recipes}/php/symfony.nix"
+    "${inputs.devenv-recipes}/database/postgresql.nix"
   ];
 
   # https://devenv.sh/basics/
-  env.GREET = "devenv";
+  env = {
+    POSTGRES_USER = "postgres";
+    POSTGRES_PASSWORD = "password";
+    POSTGRES_DB = "symfony-playground";
+    POSTGRES_PORT = "5432";
+    DATABASE_URL = "postgresql://${config.env.POSTGRES_USER}:${config.env.POSTGRES_PASSWORD}@127.0.0.1:${config.env.POSTGRES_PORT}/${config.env.POSTGRES_DB}?serverVersion=${config.services.postgres.package.version}&charset=utf8";
+  };
 
   # https://devenv.sh/packages/
   packages = [ pkgs.git ];
@@ -29,13 +41,7 @@
   # https://devenv.sh/services/
   # services.postgres.enable = true;
 
-  # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
-  '';
-
   enterShell = ''
-    hello
     git --version
   '';
 
