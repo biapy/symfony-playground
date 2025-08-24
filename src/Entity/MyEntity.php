@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\EventListener\MyEntityEntityListener;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +23,6 @@ use Symfony\Component\Uid\Uuid;
  */
 #[ORM\Entity()]
 #[ORM\Index(columns: ['path'], name: 'my_entity_path_gist_idx')]
-#[ORM\EntityListeners([MyEntityEntityListener::class])]
 class MyEntity implements \Stringable
 {
     #[ORM\Column(type: UuidType::NAME)]
